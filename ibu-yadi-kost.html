@@ -4,1085 +4,1369 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ibu Yadi Kost Management</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f1117;
-  --surface: #181c27;
-  --card: #1e2235;
-  --border: #2a2f45;
-  --accent: #4f8aff;
-  --green: #3dd68c;
-  --yellow: #f5c842;
-  --red: #ff5c5c;
-  --orange: #ff8c42;
-  --text: #e8eaf2;
-  --muted: #6b7196;
-  --font-head: 'Syne', sans-serif;
-  --font-body: 'Epilogue', sans-serif;
+  --bg: #0d1117;
+  --surface: #161b24;
+  --card: #1c2333;
+  --border: #272f3f;
+  --accent: #3b82f6;
+  --accent2: #6366f1;
+  --green: #22c55e;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --orange: #f97316;
+  --teal: #14b8a6;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --font-h: 'Syne', sans-serif;
+  --font-b: 'Epilogue', sans-serif;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:var(--font-body); min-height:100vh; display:flex; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh}
 
-/* SIDEBAR */
+/* ===== LOGIN SCREEN ===== */
+#login-screen {
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  background:var(--bg);
+  background-image: radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.07) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.07) 0%, transparent 60%);
+}
+.login-wrap { width:100%; max-width:420px; padding:1.5rem; }
+.login-logo { text-align:center; margin-bottom:2.5rem; }
+.login-logo h1 { font-family:var(--font-h); font-size:2rem; font-weight:800; letter-spacing:-0.03em; }
+.login-logo h1 span { color:var(--accent); }
+.login-logo p { color:var(--muted); font-size:0.875rem; margin-top:0.35rem; }
+.login-tabs { display:flex; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.3rem; margin-bottom:1.5rem; gap:0.25rem; }
+.login-tab { flex:1; padding:0.55rem; border:none; background:transparent; color:var(--muted); font-family:var(--font-b); font-size:0.875rem; font-weight:500; border-radius:7px; cursor:pointer; transition:all 0.2s; }
+.login-tab.active { background:var(--card); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+.login-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:2rem; }
+.login-card h2 { font-family:var(--font-h); font-size:1.2rem; font-weight:700; margin-bottom:0.35rem; }
+.login-card p { color:var(--muted); font-size:0.84rem; margin-bottom:1.5rem; }
+.form-group { margin-bottom:1rem; }
+.form-group label { display:block; font-size:0.76rem; color:var(--muted); margin-bottom:0.35rem; letter-spacing:0.04em; text-transform:uppercase; }
+.form-group input, .form-group select { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.65rem 0.85rem; color:var(--text); font-family:var(--font-b); font-size:0.9rem; outline:none; transition:border-color 0.15s; }
+.form-group input:focus, .form-group select:focus { border-color:var(--accent); }
+.form-group select option { background:var(--surface); }
+.login-hint { background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:0.75rem 1rem; font-size:0.8rem; color:#93c5fd; margin-bottom:1.25rem; }
+.login-hint strong { display:block; margin-bottom:0.2rem; }
+.btn-login { width:100%; padding:0.75rem; border:none; border-radius:8px; background:var(--accent); color:#fff; font-family:var(--font-b); font-size:0.95rem; font-weight:600; cursor:pointer; transition:all 0.2s; margin-top:0.25rem; }
+.btn-login:hover { background:#2563eb; transform:translateY(-1px); }
+.login-error { color:var(--red); font-size:0.82rem; text-align:center; margin-top:0.75rem; min-height:1.2rem; }
+
+/* ===== APP SHELL ===== */
+#app { display:none; flex-direction:row; min-height:100vh; }
 .sidebar {
-  width:230px; min-height:100vh; background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex; flex-direction:column;
-  position:fixed; top:0; left:0; bottom:0; z-index:50;
+  width:240px; background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50;
+  transition:transform 0.3s;
 }
-.logo {
-  padding:1.25rem 1.25rem 0.75rem;
-  border-bottom:1px solid var(--border);
-}
-.logo-main { font-family:var(--font-head); font-size:1.05rem; font-weight:800; color:var(--text); letter-spacing:-0.02em; line-height:1.2; }
-.logo-main span { color:var(--accent); }
-.logo-sub { font-size:0.68rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; margin-top:0.2rem; }
-.nav { flex:1; padding:0.85rem 0.75rem; display:flex; flex-direction:column; gap:0.2rem; }
-.nav-item {
-  display:flex; align-items:center; gap:0.65rem;
-  padding:0.55rem 0.75rem; border-radius:6px;
-  cursor:pointer; font-size:0.855rem; font-weight:400;
-  color:var(--muted); transition:all 0.15s;
-  border:none; background:none; width:100%; text-align:left;
-}
+.logo-area { padding:1.25rem 1.25rem 1rem; border-bottom:1px solid var(--border); }
+.logo-name { font-family:var(--font-h); font-size:1rem; font-weight:800; line-height:1.2; }
+.logo-name span { color:var(--accent); }
+.logo-role { font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-top:0.25rem; }
+.logo-user { font-size:0.8rem; color:var(--teal); margin-top:0.1rem; font-weight:500; }
+.nav { flex:1; padding:0.9rem 0.75rem; display:flex; flex-direction:column; gap:0.2rem; overflow-y:auto; }
+.nav-section { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); padding:0.6rem 0.75rem 0.3rem; margin-top:0.25rem; }
+.nav-item { display:flex; align-items:center; gap:0.65rem; padding:0.55rem 0.75rem; border-radius:7px; cursor:pointer; font-size:0.855rem; color:var(--muted); transition:all 0.15s; border:none; background:none; width:100%; text-align:left; font-family:var(--font-b); }
 .nav-item:hover { background:var(--card); color:var(--text); }
-.nav-item.active { background:rgba(79,138,255,0.12); color:var(--accent); font-weight:500; }
-.nav-icon { font-size:0.95rem; width:20px; text-align:center; }
-.sidebar-footer { padding:0.85rem; border-top:1px solid var(--border); font-size:0.72rem; color:var(--muted); }
-.online-dot { display:inline-block; width:7px; height:7px; background:var(--green); border-radius:50%; margin-right:0.4em; }
+.nav-item.active { background:rgba(59,130,246,0.12); color:var(--accent); font-weight:500; }
+.nav-icon { font-size:0.95rem; width:20px; text-align:center; flex-shrink:0; }
+.sidebar-footer { padding:0.9rem; border-top:1px solid var(--border); }
+.btn-logout { width:100%; padding:0.5rem; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:var(--red); border-radius:7px; font-family:var(--font-b); font-size:0.82rem; cursor:pointer; transition:all 0.15s; }
+.btn-logout:hover { background:rgba(239,68,68,0.15); }
+.online-dot { display:inline-block; width:6px; height:6px; background:var(--green); border-radius:50%; margin-right:0.35rem; }
+.clock { font-size:0.72rem; color:var(--muted); margin-bottom:0.5rem; }
 
-/* MAIN */
-.main { margin-left:230px; flex:1; padding:1.75rem; min-height:100vh; }
-.page { display:none; }
-.page.active { display:block; animation: fadeIn 0.2s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+/* ===== MAIN ===== */
+.main { margin-left:240px; flex:1; padding:1.75rem; min-height:100vh; }
+.page { display:none; animation:fadeIn 0.22s ease; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
 
-.page-header { margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; }
-.page-header-text h1 { font-family:var(--font-head); font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; }
-.page-header-text p { color:var(--muted); font-size:0.855rem; margin-top:0.2rem; }
+.page-hdr { margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; }
+.page-hdr h1 { font-family:var(--font-h); font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; }
+.page-hdr p { color:var(--muted); font-size:0.855rem; margin-top:0.2rem; }
 
 /* STATS */
-.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.85rem; margin-bottom:1.5rem; }
-.stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.1rem; position:relative; overflow:hidden; }
-.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-.stat-card.blue::before { background:var(--accent); }
-.stat-card.green::before { background:var(--green); }
-.stat-card.yellow::before { background:var(--yellow); }
-.stat-card.red::before { background:var(--red); }
-.stat-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
-.stat-value { font-family:var(--font-head); font-size:1.8rem; font-weight:700; line-height:1; }
-.stat-sub { font-size:0.72rem; color:var(--muted); margin-top:0.3rem; }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:0.85rem; margin-bottom:1.5rem; }
+.stat { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.1rem; position:relative; overflow:hidden; }
+.stat::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.stat.s-blue::before{background:var(--accent)} .stat.s-green::before{background:var(--green)}
+.stat.s-yellow::before{background:var(--yellow)} .stat.s-red::before{background:var(--red)}
+.stat.s-teal::before{background:var(--teal)}
+.stat-lbl { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
+.stat-val { font-family:var(--font-h); font-size:1.8rem; font-weight:700; line-height:1; }
+.stat-sub { font-size:0.71rem; color:var(--muted); margin-top:0.3rem; }
 
 /* CARD */
 .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.2rem; }
-.card-title { font-family:var(--font-head); font-size:0.92rem; font-weight:600; margin-bottom:0.9rem; }
+.card + .card { margin-top:1rem; }
+.card-title { font-family:var(--font-h); font-size:0.9rem; font-weight:600; margin-bottom:0.9rem; display:flex; align-items:center; gap:0.5rem; }
 .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-
-/* TABLE */
-.table-wrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; font-size:0.84rem; }
-th { text-align:left; color:var(--muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); font-weight:500; }
-td { padding:0.7rem 0.75rem; border-bottom:1px solid rgba(42,47,69,0.5); vertical-align:middle; }
-tr:last-child td { border-bottom:none; }
-tr:hover td { background:rgba(255,255,255,0.02); }
+.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:0.85rem; }
 
 /* BADGES */
-.badge { display:inline-block; padding:0.2em 0.65em; border-radius:99px; font-size:0.68rem; font-weight:500; letter-spacing:0.03em; }
-.badge-green { background:rgba(61,214,140,0.12); color:var(--green); }
-.badge-red { background:rgba(255,92,92,0.12); color:var(--red); }
-.badge-yellow { background:rgba(245,200,66,0.12); color:var(--yellow); }
-.badge-blue { background:rgba(79,138,255,0.12); color:var(--accent); }
-.badge-orange { background:rgba(255,140,66,0.12); color:var(--orange); }
+.badge { display:inline-block; padding:0.18em 0.6em; border-radius:99px; font-size:0.68rem; font-weight:500; }
+.b-green{background:rgba(34,197,94,0.12);color:var(--green)}
+.b-red{background:rgba(239,68,68,0.12);color:var(--red)}
+.b-yellow{background:rgba(234,179,8,0.12);color:var(--yellow)}
+.b-blue{background:rgba(59,130,246,0.12);color:var(--accent)}
+.b-orange{background:rgba(249,115,22,0.12);color:var(--orange)}
+.b-teal{background:rgba(20,184,166,0.12);color:var(--teal)}
 
-/* ROOMS GRID */
-.rooms-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.7rem; }
-.room-tile {
-  background:var(--card); border:2px solid var(--border); border-radius:8px;
-  padding:0.9rem 0.7rem; cursor:pointer; transition:all 0.15s;
-  text-align:center;
-}
-.room-tile:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
-.room-tile.occupied { border-color:rgba(61,214,140,0.45); }
-.room-tile.vacant { border-color:rgba(107,113,150,0.25); }
-.room-tile.maintenance { border-color:rgba(255,140,66,0.45); }
-.room-dot { width:9px; height:9px; border-radius:50%; margin:0 auto 0.45rem; }
-.dot-green { background:var(--green); }
-.dot-gray { background:var(--muted); }
-.dot-orange { background:var(--orange); }
-.room-num { font-family:var(--font-head); font-size:1.25rem; font-weight:700; }
-.room-type { font-size:0.68rem; color:var(--muted); margin-top:0.15rem; }
-.room-status-label { font-size:0.7rem; margin-top:0.3rem; }
-.room-tenant-name { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* TABLE */
+.tw { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:0.835rem; }
+th { text-align:left; color:var(--muted); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.07em; padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); font-weight:500; }
+td { padding:0.7rem 0.75rem; border-bottom:1px solid rgba(39,47,63,0.6); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(255,255,255,0.015); }
 
 /* BUTTONS */
-.btn { display:inline-flex; align-items:center; gap:0.4em; padding:0.5em 1.1em; border-radius:6px; border:none; font-family:var(--font-body); font-size:0.82rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
+.btn { display:inline-flex; align-items:center; gap:0.4em; padding:0.5em 1.05em; border-radius:7px; border:none; font-family:var(--font-b); font-size:0.82rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
 .btn-primary { background:var(--accent); color:#fff; }
-.btn-primary:hover { background:#3a74f0; }
+.btn-primary:hover { background:#2563eb; }
 .btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
 .btn-ghost:hover { background:var(--card); color:var(--text); }
-.btn-danger { background:rgba(255,92,92,0.1); color:var(--red); border:1px solid rgba(255,92,92,0.2); }
-.btn-danger:hover { background:rgba(255,92,92,0.2); }
-.btn-success { background:rgba(61,214,140,0.1); color:var(--green); border:1px solid rgba(61,214,140,0.2); }
-.btn-success:hover { background:rgba(61,214,140,0.2); }
-.btn-yellow { background:rgba(245,200,66,0.1); color:var(--yellow); border:1px solid rgba(245,200,66,0.2); }
-.btn-sm { padding:0.28em 0.65em; font-size:0.75rem; }
+.btn-danger { background:rgba(239,68,68,0.1); color:var(--red); border:1px solid rgba(239,68,68,0.2); }
+.btn-danger:hover { background:rgba(239,68,68,0.18); }
+.btn-success { background:rgba(34,197,94,0.1); color:var(--green); border:1px solid rgba(34,197,94,0.2); }
+.btn-success:hover { background:rgba(34,197,94,0.18); }
+.btn-teal { background:rgba(20,184,166,0.1); color:var(--teal); border:1px solid rgba(20,184,166,0.2); }
+.btn-sm { padding:0.27em 0.65em; font-size:0.75rem; }
 
-/* FORM */
-.form-group { margin-bottom:0.9rem; }
-.form-group label { display:block; font-size:0.76rem; color:var(--muted); margin-bottom:0.35rem; letter-spacing:0.03em; }
-.form-group input, .form-group select, .form-group textarea {
-  width:100%; background:var(--bg); border:1px solid var(--border);
-  border-radius:6px; padding:0.55rem 0.75rem; color:var(--text);
-  font-family:var(--font-body); font-size:0.875rem; outline:none;
-  transition:border-color 0.15s;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
-.form-group textarea { resize:vertical; min-height:70px; }
-.form-group select option { background:var(--surface); color:var(--text); }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; }
+/* FORMS */
+.fg { margin-bottom:0.9rem; }
+.fg label { display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.35rem; letter-spacing:0.03em; }
+.fg input, .fg select, .fg textarea { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:0.58rem 0.78rem; color:var(--text); font-family:var(--font-b); font-size:0.875rem; outline:none; transition:border-color 0.15s; }
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--accent); }
+.fg textarea { resize:vertical; min-height:70px; }
+.fg select option { background:var(--surface); color:var(--text); }
+.fr { display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; }
 
 /* MODAL */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
-.modal-overlay.open { display:flex; }
-.modal { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.6rem; width:92%; max-width:500px; max-height:92vh; overflow-y:auto; animation:modalIn 0.2s ease; }
-@keyframes modalIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
-.modal-title { font-family:var(--font-head); font-size:1.05rem; font-weight:700; margin-bottom:1.1rem; }
-.modal-actions { display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.1rem; }
+.mo { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(5px); }
+.mo.open { display:flex; }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:13px; padding:1.65rem; width:92%; max-width:500px; max-height:92vh; overflow-y:auto; animation:mIn 0.2s ease; }
+@keyframes mIn { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
+.modal-title { font-family:var(--font-h); font-size:1.05rem; font-weight:700; margin-bottom:1.1rem; }
+.modal-actions { display:flex; gap:0.65rem; justify-content:flex-end; margin-top:1.1rem; }
 
-/* MAINTENANCE */
-.maint-item { padding:0.85rem; background:var(--bg); border-radius:8px; margin-bottom:0.65rem; border-left:3px solid var(--border); }
-.maint-item.open-issue { border-left-color:var(--red); }
-.maint-item.in-progress { border-left-color:var(--yellow); }
-.maint-item.resolved { border-left-color:var(--green); }
-.maint-header { display:flex; justify-content:space-between; align-items:flex-start; }
-.maint-title { font-size:0.875rem; font-weight:500; }
-.maint-desc { font-size:0.79rem; color:var(--muted); margin-top:0.2rem; }
-.maint-meta { font-size:0.71rem; color:var(--muted); margin-top:0.45rem; }
+/* ROOMS GRID */
+.rooms-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:0.7rem; }
+.rtile { background:var(--card); border:2px solid var(--border); border-radius:9px; padding:0.9rem 0.7rem; cursor:pointer; transition:all 0.15s; text-align:center; }
+.rtile:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(0,0,0,0.35); }
+.rtile.occupied { border-color:rgba(34,197,94,0.4); }
+.rtile.vacant { border-color:rgba(100,116,139,0.22); }
+.rtile.maintenance { border-color:rgba(249,115,22,0.4); }
+.rdot { width:9px; height:9px; border-radius:50%; margin:0 auto 0.45rem; }
+.dg{background:var(--green)} .dm{background:var(--muted)} .do{background:var(--orange)}
+.rnum { font-family:var(--font-h); font-size:1.25rem; font-weight:700; }
+.rtype { font-size:0.67rem; color:var(--muted); margin-top:0.12rem; }
+.rstatus { font-size:0.69rem; margin-top:0.28rem; }
+.rtenant { font-size:0.69rem; color:var(--muted); margin-top:0.18rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-/* IMPROVEMENTS */
-.improve-item { padding:0.75rem 0; border-bottom:1px solid rgba(42,47,69,0.4); }
-.improve-item:last-child { border-bottom:none; }
-.improve-vote { display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem; }
-.vote-btn { background:none; border:1px solid var(--border); border-radius:4px; padding:0.2em 0.5em; color:var(--muted); cursor:pointer; font-size:0.75rem; transition:all 0.15s; }
+/* MAINTENANCE ITEMS */
+.mi { padding:0.85rem; background:var(--bg); border-radius:8px; margin-bottom:0.65rem; border-left:3px solid var(--border); }
+.mi.open-issue{border-left-color:var(--red)} .mi.in-progress{border-left-color:var(--yellow)} .mi.resolved{border-left-color:var(--green)}
+
+/* IMPROVE */
+.ii { padding:0.75rem 0; border-bottom:1px solid rgba(39,47,63,0.5); }
+.ii:last-child{border-bottom:none}
+.vote-btn { background:none; border:1px solid var(--border); border-radius:4px; padding:0.18em 0.5em; color:var(--muted); cursor:pointer; font-size:0.74rem; transition:all 0.15s; }
 .vote-btn:hover { border-color:var(--accent); color:var(--accent); }
 
 /* ACTIVITY */
-.activity-item { display:flex; gap:0.75rem; padding:0.6rem 0; border-bottom:1px solid rgba(42,47,69,0.4); font-size:0.81rem; }
-.activity-item:last-child { border-bottom:none; }
-.act-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:0.3rem; }
-.act-time { color:var(--muted); font-size:0.7rem; white-space:nowrap; }
+.ai { display:flex; gap:0.7rem; padding:0.58rem 0; border-bottom:1px solid rgba(39,47,63,0.45); font-size:0.81rem; }
+.ai:last-child{border-bottom:none}
+.adot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:0.35rem; }
+.atime { color:var(--muted); font-size:0.69rem; white-space:nowrap; }
 
-/* PAY ITEM */
-.pay-item { display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0; border-bottom:1px solid rgba(42,47,69,0.4); }
-.pay-item:last-child { border-bottom:none; }
+/* INVOICE PRINT */
+.inv-wrap { background:#fff; color:#1a1a2e; border-radius:10px; padding:2rem; font-family:Arial,sans-serif; font-size:13px; line-height:1.5; }
 
-/* INVOICE PREVIEW */
-.invoice-preview {
-  background:#fff; color:#222; border-radius:8px;
-  padding:2rem; font-family:Arial,sans-serif; font-size:13px;
-  line-height:1.5; max-width:600px; margin:0 auto;
-}
-.inv-header { display:flex; justify-content:space-between; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:2px solid #e5e7eb; }
-.inv-company { font-size:16px; font-weight:700; color:#1a1a2e; }
-.inv-title { font-size:22px; font-weight:800; color:#1a1a2e; text-align:right; }
-.inv-label { font-size:10px; color:#888; text-transform:uppercase; letter-spacing:0.05em; }
-.inv-table { width:100%; border-collapse:collapse; margin:1rem 0; }
-.inv-table th { background:#f3f4f6; padding:0.5rem 0.75rem; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:#555; }
-.inv-table td { padding:0.5rem 0.75rem; border-bottom:1px solid #e5e7eb; }
-.inv-total { text-align:right; margin-top:0.75rem; font-size:15px; font-weight:700; }
-.inv-footer { margin-top:1.5rem; padding-top:0.75rem; border-top:1px solid #e5e7eb; font-size:11px; color:#888; text-align:center; }
+/* TENANT PORTAL */
+.tenant-hero { background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(99,102,241,0.08)); border:1px solid rgba(59,130,246,0.2); border-radius:14px; padding:1.5rem 1.75rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+.tenant-hero-name { font-family:var(--font-h); font-size:1.4rem; font-weight:700; }
+.tenant-hero-sub { color:var(--muted); font-size:0.855rem; margin-top:0.2rem; }
+.tenant-hero-badge { text-align:right; }
+.tenant-meta-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:0.75rem; margin-bottom:1.5rem; }
+.tmeta { background:var(--card); border:1px solid var(--border); border-radius:9px; padding:0.9rem 1rem; }
+.tmeta-lbl { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.3rem; }
+.tmeta-val { font-family:var(--font-h); font-size:1.1rem; font-weight:600; }
+
+/* NOTIF BANNER */
+.notif { border-radius:8px; padding:0.8rem 1rem; margin-bottom:0.75rem; font-size:0.855rem; display:flex; align-items:flex-start; gap:0.65rem; }
+.notif-warn { background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.25); color:#fde047; }
+.notif-ok { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); color:#86efac; }
+.notif-info { background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); color:#93c5fd; }
 
 /* TOAST */
-.toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:999; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1.1rem; font-size:0.84rem; transform:translateY(80px); opacity:0; transition:all 0.3s; display:flex; align-items:center; gap:0.5em; }
+.toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:999; background:var(--card); border:1px solid var(--border); border-radius:9px; padding:0.7rem 1.1rem; font-size:0.84rem; transform:translateY(80px); opacity:0; transition:all 0.3s; display:flex; align-items:center; gap:0.5em; box-shadow:0 8px 30px rgba(0,0,0,0.4); }
 .toast.show { transform:translateY(0); opacity:1; }
 
-::-webkit-scrollbar { width:4px; height:4px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
+/* FILTER ROW */
+.frow { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.1rem; }
+
+::-webkit-scrollbar{width:4px;height:4px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
 
 .empty-state { color:var(--muted); font-size:0.855rem; text-align:center; padding:2rem 1rem; }
-.filter-row { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.1rem; }
+
+@media(max-width:640px){
+  .sidebar{transform:translateX(-100%)} .sidebar.open{transform:translateX(0)} .main{margin-left:0}
+  .fr{grid-template-columns:1fr} .grid2{grid-template-columns:1fr} .grid3{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="logo">
-    <div class="logo-main">Ibu Yadi<br><span>Kost</span></div>
-    <div class="logo-sub">Management System</div>
-  </div>
-  <nav class="nav">
-    <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span> Dashboard</button>
-    <button class="nav-item" onclick="showPage('rooms',this)"><span class="nav-icon">🚪</span> Kamar (Rooms)</button>
-    <button class="nav-item" onclick="showPage('tenants',this)"><span class="nav-icon">👥</span> Penyewa (Tenants)</button>
-    <button class="nav-item" onclick="showPage('payments',this)"><span class="nav-icon">💳</span> Pembayaran</button>
-    <button class="nav-item" onclick="showPage('checkin',this)"><span class="nav-icon">📋</span> Check-in/out</button>
-    <button class="nav-item" onclick="showPage('maintenance',this)"><span class="nav-icon">🔧</span> Maintenance</button>
-    <button class="nav-item" onclick="showPage('invoice',this)"><span class="nav-icon">🧾</span> Invoice PDF</button>
-    <button class="nav-item" onclick="showPage('improvements',this)"><span class="nav-icon">💡</span> Saran</button>
-  </nav>
-  <div class="sidebar-footer"><span class="online-dot"></span>Aktif · <span id="liveTime"></span></div>
-</aside>
-
-<main class="main">
-
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Dashboard</h1><p id="todayDate">Memuat...</p></div>
-  </div>
-  <div class="stats">
-    <div class="stat-card blue"><div class="stat-label">Total Kamar</div><div class="stat-value" id="s-total">0</div><div class="stat-sub">Kapasitas</div></div>
-    <div class="stat-card green"><div class="stat-label">Terisi</div><div class="stat-value" id="s-occupied">0</div><div class="stat-sub">Penyewa aktif</div></div>
-    <div class="stat-card yellow"><div class="stat-label">Kosong</div><div class="stat-value" id="s-vacant">0</div><div class="stat-sub">Tersedia</div></div>
-    <div class="stat-card red"><div class="stat-label">Tunggakan</div><div class="stat-value" id="s-overdue">0</div><div class="stat-sub">Belum bayar</div></div>
-  </div>
-  <div class="grid2" style="margin-bottom:1rem">
-    <div class="card">
-      <div class="card-title">Aktivitas Terbaru</div>
-      <div id="activity-list"><div class="activity-item"><div class="act-dot"></div><div style="flex:1">Sistem diinisialisasi</div><div class="act-time">baru saja</div></div></div>
+<!-- ===== LOGIN ===== -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <h1>Ibu Yadi <span>Kost</span></h1>
+      <p>Sistem Manajemen Kost Terpadu</p>
     </div>
-    <div class="card">
-      <div class="card-title">Tagihan Mendatang</div>
-      <div id="upcoming-payments"><div class="empty-state" style="padding:0.5rem 0;text-align:left">Belum ada penyewa.</div></div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('admin',this)">👑 Admin</button>
+      <button class="login-tab" onclick="switchLoginTab('tenant',this)">🏠 Penyewa</button>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Masalah Maintenance Terbuka</div>
-    <div id="dash-maintenance"><div class="empty-state" style="padding:0.5rem 0;text-align:left">Tidak ada masalah.</div></div>
-  </div>
-</div>
 
-<!-- ROOMS -->
-<div class="page" id="page-rooms">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Kamar</h1><p>Kelola semua kamar kost Anda</p></div>
-    <button class="btn btn-primary" onclick="openModal('modal-addroom')">+ Tambah Kamar</button>
-  </div>
-  <div class="filter-row">
-    <button class="btn btn-ghost btn-sm" onclick="filterRooms('all')">Semua</button>
-    <button class="btn btn-ghost btn-sm" onclick="filterRooms('occupied')">Terisi</button>
-    <button class="btn btn-ghost btn-sm" onclick="filterRooms('vacant')">Kosong</button>
-    <button class="btn btn-ghost btn-sm" onclick="filterRooms('maintenance')">Maintenance</button>
-  </div>
-  <div class="rooms-grid" id="rooms-grid"><div class="empty-state" style="grid-column:1/-1">Belum ada kamar. Klik "+ Tambah Kamar".</div></div>
-</div>
-
-<!-- TENANTS -->
-<div class="page" id="page-tenants">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Penyewa</h1><p>Semua penghuni aktif dan lama</p></div>
-    <button class="btn btn-primary" onclick="openAddTenantModal()">+ Tambah Penyewa</button>
-  </div>
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Nama</th><th>Kamar</th><th>Masuk</th><th>Sewa/Bulan</th><th>Jatuh Tempo</th><th>Status</th><th>Aksi</th></tr></thead>
-        <tbody id="tenants-tbody"><tr><td colspan="7" class="empty-state">Belum ada penyewa.</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- PAYMENTS -->
-<div class="page" id="page-payments">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Pembayaran</h1><p>Catat dan pantau sewa & tagihan</p></div>
-    <button class="btn btn-primary" onclick="openModal('modal-addpayment')">+ Catat Pembayaran</button>
-  </div>
-  <div class="stats" style="grid-template-columns:repeat(3,1fr)">
-    <div class="stat-card green"><div class="stat-label">Terkumpul Bulan Ini</div><div class="stat-value" id="p-collected" style="font-size:1.2rem">Rp 0</div></div>
-    <div class="stat-card red"><div class="stat-label">Belum Lunas</div><div class="stat-value" id="p-outstanding" style="font-size:1.2rem">Rp 0</div></div>
-    <div class="stat-card blue"><div class="stat-label">Total Transaksi</div><div class="stat-value" id="p-count">0</div></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Riwayat Pembayaran</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Penyewa</th><th>Kamar</th><th>Jumlah</th><th>Tanggal</th><th>Jenis</th><th>Status</th></tr></thead>
-        <tbody id="payments-tbody"><tr><td colspan="6" class="empty-state">Belum ada pembayaran.</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- CHECK IN/OUT -->
-<div class="page" id="page-checkin">
-  <div class="page-header"><div class="page-header-text"><h1>Check-in / Check-out</h1><p>Catat kedatangan dan kepergian penyewa</p></div></div>
-  <div class="grid2">
-    <div class="card">
-      <div class="card-title" style="color:var(--green)">✓ Check In</div>
-      <div class="form-group"><label>Pilih Penyewa</label><select id="ci-tenant"><option value="">-- Pilih --</option></select></div>
-      <div class="form-group"><label>Tanggal & Waktu</label><input type="datetime-local" id="ci-date"></div>
-      <div class="form-group"><label>Catatan</label><textarea id="ci-notes" placeholder="Catatan kedatangan..."></textarea></div>
-      <button class="btn btn-success" onclick="doCheckin()">✓ Konfirmasi Check-in</button>
-    </div>
-    <div class="card">
-      <div class="card-title" style="color:var(--red)">✗ Check Out</div>
-      <div class="form-group"><label>Pilih Penyewa</label><select id="co-tenant"><option value="">-- Pilih --</option></select></div>
-      <div class="form-group"><label>Tanggal & Waktu</label><input type="datetime-local" id="co-date"></div>
-      <div class="form-group"><label>Kondisi Kamar</label><select id="co-condition"><option>Baik</option><option>Perlu perbaikan kecil</option><option>Perlu perbaikan besar</option></select></div>
-      <div class="form-group"><label>Catatan</label><textarea id="co-notes" placeholder="Catatan kepergian..."></textarea></div>
-      <button class="btn btn-danger" onclick="doCheckout()">✗ Konfirmasi Check-out</button>
-    </div>
-  </div>
-  <div class="card" style="margin-top:1rem">
-    <div class="card-title">Log Check-in/out</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Penyewa</th><th>Kamar</th><th>Jenis</th><th>Tanggal/Waktu</th><th>Catatan</th></tr></thead>
-        <tbody id="log-tbody"><tr><td colspan="5" class="empty-state">Belum ada log.</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- MAINTENANCE -->
-<div class="page" id="page-maintenance">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Maintenance</h1><p>Lacak dan selesaikan masalah kamar</p></div>
-    <button class="btn btn-primary" onclick="openModal('modal-addmaint')">+ Laporkan Masalah</button>
-  </div>
-  <div class="filter-row">
-    <button class="btn btn-ghost btn-sm" onclick="filterMaint('all')">Semua</button>
-    <button class="btn btn-ghost btn-sm" onclick="filterMaint('open')">Terbuka</button>
-    <button class="btn btn-ghost btn-sm" onclick="filterMaint('in-progress')">Dalam Proses</button>
-    <button class="btn btn-ghost btn-sm" onclick="filterMaint('resolved')">Selesai</button>
-  </div>
-  <div id="maint-list"><div class="empty-state">Tidak ada masalah dilaporkan.</div></div>
-</div>
-
-<!-- INVOICE -->
-<div class="page" id="page-invoice">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Invoice PDF</h1><p>Buat dan cetak invoice tagihan penyewa</p></div>
-  </div>
-  <div class="grid2" style="align-items:start">
-    <div class="card">
-      <div class="card-title">Buat Invoice</div>
-      <div class="form-group"><label>Pilih Penyewa</label><select id="inv-tenant" onchange="fillInvoiceDefaults()"><option value="">-- Pilih Penyewa --</option></select></div>
-      <div class="form-group"><label>Nomor Invoice</label><input type="text" id="inv-number" placeholder="INV-001"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Periode</label><input type="month" id="inv-period"></div>
-        <div class="form-group"><label>Tanggal Invoice</label><input type="date" id="inv-date"></div>
-      </div>
-      <div class="form-group"><label>Sewa Bulanan (Rp)</label><input type="number" id="inv-rent" placeholder="3500000"></div>
-      <div class="form-group"><label>Biaya Listrik (Rp)</label><input type="number" id="inv-electric" placeholder="0"></div>
-      <div class="form-group"><label>Biaya Air (Rp)</label><input type="number" id="inv-water" placeholder="0"></div>
-      <div class="form-group"><label>Biaya Lainnya (Rp)</label><input type="number" id="inv-other" placeholder="0"></div>
-      <div class="form-group"><label>Keterangan Lainnya</label><input type="text" id="inv-otherdesc" placeholder="e.g. Denda keterlambatan"></div>
-      <div class="form-group"><label>Catatan</label><textarea id="inv-notes" placeholder="Catatan tambahan..."></textarea></div>
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="previewInvoice()">👁 Preview Invoice</button>
-        <button class="btn btn-ghost" onclick="printInvoice()">🖨 Cetak / Simpan PDF</button>
+    <!-- Admin Login -->
+    <div id="login-admin">
+      <div class="login-card">
+        <h2>Login Admin</h2>
+        <p>Masuk sebagai pengelola kost</p>
+        <div class="login-hint"><strong>Demo Credentials:</strong>Username: admin · Password: admin123</div>
+        <div class="fg"><label>Username</label><input type="text" id="a-user" placeholder="admin" value="admin"></div>
+        <div class="fg"><label>Password</label><input type="password" id="a-pass" placeholder="••••••••" value="admin123"></div>
+        <button class="btn-login" onclick="loginAdmin()">Masuk sebagai Admin</button>
+        <div class="login-error" id="a-err"></div>
       </div>
     </div>
-    <div>
-      <div class="card-title" style="margin-bottom:0.75rem">Preview</div>
-      <div id="invoice-preview-area">
-        <div class="empty-state">Isi form dan klik "Preview Invoice" untuk melihat tampilan.</div>
+
+    <!-- Tenant Login -->
+    <div id="login-tenant" style="display:none">
+      <div class="login-card">
+        <h2>Login Penyewa</h2>
+        <p>Masuk untuk melihat info kamar & tagihan Anda</p>
+        <div class="login-hint"><strong>Cara Login:</strong> Pilih nama Anda, masukkan nomor HP sebagai password. Demo: pilih penyewa mana saja → password: <strong>1234</strong></div>
+        <div class="fg"><label>Pilih Nama Anda</label>
+          <select id="t-login-select"><option value="">-- Pilih nama --</option></select>
+        </div>
+        <div class="fg"><label>Password (No. HP / PIN)</label><input type="password" id="t-pass" placeholder="••••••" value="1234"></div>
+        <button class="btn-login" onclick="loginTenant()" style="background:var(--teal)">Masuk sebagai Penyewa</button>
+        <div class="login-error" id="t-err"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- IMPROVEMENTS -->
-<div class="page" id="page-improvements">
-  <div class="page-header">
-    <div class="page-header-text"><h1>Saran & Perbaikan</h1><p>Ide dari penyewa atau pengelola</p></div>
-    <button class="btn btn-primary" onclick="openModal('modal-addimprove')">+ Tambah Saran</button>
-  </div>
-  <div class="card">
-    <div id="improve-list"><div class="empty-state">Belum ada saran.</div></div>
-  </div>
-</div>
+<!-- ===== APP ===== -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-area">
+      <div class="logo-name">Ibu Yadi <span>Kost</span></div>
+      <div class="logo-role" id="sb-role">Admin Panel</div>
+      <div class="logo-user" id="sb-user">Administrator</div>
+    </div>
+    <nav class="nav" id="main-nav">
+      <!-- Filled by JS -->
+    </nav>
+    <div class="sidebar-footer">
+      <div class="clock"><span class="online-dot"></span><span id="liveTime"></span></div>
+      <button class="btn-logout" onclick="logout()">← Keluar</button>
+    </div>
+  </aside>
 
-</main>
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main-content">
+
+    <!-- ===== ADMIN PAGES ===== -->
+
+    <!-- DASHBOARD -->
+    <div class="page" id="page-dashboard">
+      <div class="page-hdr"><div><h1>Dashboard</h1><p id="todayDate"></p></div></div>
+      <div class="stats">
+        <div class="stat s-blue"><div class="stat-lbl">Total Kamar</div><div class="stat-val" id="s-total">0</div><div class="stat-sub">Kapasitas</div></div>
+        <div class="stat s-green"><div class="stat-lbl">Terisi</div><div class="stat-val" id="s-occ">0</div><div class="stat-sub">Penyewa aktif</div></div>
+        <div class="stat s-yellow"><div class="stat-lbl">Kosong</div><div class="stat-val" id="s-vac">0</div><div class="stat-sub">Tersedia</div></div>
+        <div class="stat s-red"><div class="stat-lbl">Tunggakan</div><div class="stat-val" id="s-over">0</div><div class="stat-sub">Belum bayar</div></div>
+        <div class="stat s-teal"><div class="stat-lbl">Pendapatan Bln Ini</div><div class="stat-val" id="s-income" style="font-size:1rem">Rp 0</div><div class="stat-sub">Sudah terkumpul</div></div>
+      </div>
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card"><div class="card-title">📋 Aktivitas Terbaru</div><div id="dash-activity"></div></div>
+        <div class="card"><div class="card-title">💰 Tagihan Mendatang</div><div id="dash-upcoming"></div></div>
+      </div>
+      <div class="card"><div class="card-title">🔧 Maintenance Terbuka</div><div id="dash-maint"></div></div>
+    </div>
+
+    <!-- ROOMS -->
+    <div class="page" id="page-rooms">
+      <div class="page-hdr">
+        <div><h1>Kamar</h1><p>Kelola semua unit kamar kost</p></div>
+        <button class="btn btn-primary" onclick="openModal('m-addroom')">+ Tambah Kamar</button>
+      </div>
+      <div class="frow">
+        <button class="btn btn-ghost btn-sm" onclick="filterRooms('all')">Semua</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterRooms('occupied')">Terisi</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterRooms('vacant')">Kosong</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterRooms('maintenance')">Perbaikan</button>
+      </div>
+      <div class="rooms-grid" id="rooms-grid"></div>
+    </div>
+
+    <!-- TENANTS (ADMIN) -->
+    <div class="page" id="page-tenants">
+      <div class="page-hdr">
+        <div><h1>Penyewa</h1><p>Kelola semua data penghuni</p></div>
+        <button class="btn btn-primary" onclick="openAddTenantModal()">+ Tambah Penyewa</button>
+      </div>
+      <div class="card"><div class="tw">
+        <table>
+          <thead><tr><th>Nama</th><th>Kamar</th><th>Masuk</th><th>Sewa/Bulan</th><th>Jatuh Tempo</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="tenants-tbody"></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- PAYMENTS (ADMIN) -->
+    <div class="page" id="page-payments">
+      <div class="page-hdr">
+        <div><h1>Pembayaran</h1><p>Catat dan pantau semua transaksi</p></div>
+        <button class="btn btn-primary" onclick="openModal('m-addpay')">+ Catat Pembayaran</button>
+      </div>
+      <div class="grid3" style="margin-bottom:1.25rem">
+        <div class="stat s-green"><div class="stat-lbl">Terkumpul Bulan Ini</div><div class="stat-val" id="p-coll" style="font-size:1.1rem">Rp 0</div></div>
+        <div class="stat s-red"><div class="stat-lbl">Belum Lunas</div><div class="stat-val" id="p-out" style="font-size:1.1rem">Rp 0</div></div>
+        <div class="stat s-blue"><div class="stat-lbl">Total Transaksi</div><div class="stat-val" id="p-cnt">0</div></div>
+      </div>
+      <div class="card"><div class="card-title">Riwayat Pembayaran</div><div class="tw">
+        <table>
+          <thead><tr><th>Penyewa</th><th>Kamar</th><th>Jumlah</th><th>Tanggal</th><th>Jenis</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="payments-tbody"></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- CHECK IN/OUT -->
+    <div class="page" id="page-checkinout">
+      <div class="page-hdr"><div><h1>Check-in / Check-out</h1><p>Catat kedatangan dan kepergian</p></div></div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title" style="color:var(--green)">✓ Check In</div>
+          <div class="fg"><label>Pilih Penyewa</label><select id="ci-ten"><option value="">-- Pilih --</option></select></div>
+          <div class="fg"><label>Waktu</label><input type="datetime-local" id="ci-dt"></div>
+          <div class="fg"><label>Catatan</label><textarea id="ci-note" placeholder="Catatan..."></textarea></div>
+          <button class="btn btn-success" onclick="doCheckin()">✓ Konfirmasi Check-in</button>
+        </div>
+        <div class="card">
+          <div class="card-title" style="color:var(--red)">✗ Check Out</div>
+          <div class="fg"><label>Pilih Penyewa</label><select id="co-ten"><option value="">-- Pilih --</option></select></div>
+          <div class="fg"><label>Waktu</label><input type="datetime-local" id="co-dt"></div>
+          <div class="fg"><label>Kondisi Kamar</label><select id="co-cond"><option>Baik</option><option>Perlu perbaikan kecil</option><option>Perlu perbaikan besar</option></select></div>
+          <div class="fg"><label>Catatan</label><textarea id="co-note" placeholder="Catatan..."></textarea></div>
+          <button class="btn btn-danger" onclick="doCheckout()">✗ Konfirmasi Check-out</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1rem"><div class="card-title">Log Check-in/out</div><div class="tw">
+        <table><thead><tr><th>Penyewa</th><th>Kamar</th><th>Jenis</th><th>Waktu</th><th>Catatan</th></tr></thead>
+        <tbody id="log-tbody"></tbody></table>
+      </div></div>
+    </div>
+
+    <!-- MAINTENANCE (ADMIN) -->
+    <div class="page" id="page-maintenance">
+      <div class="page-hdr">
+        <div><h1>Maintenance</h1><p>Lacak dan selesaikan masalah kamar</p></div>
+        <button class="btn btn-primary" onclick="openMaintModal()">+ Laporkan Masalah</button>
+      </div>
+      <div class="frow">
+        <button class="btn btn-ghost btn-sm" onclick="filterMaint('all')">Semua</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMaint('open')">Terbuka</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMaint('in-progress')">Proses</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterMaint('resolved')">Selesai</button>
+      </div>
+      <div id="maint-list"></div>
+    </div>
+
+    <!-- INVOICE (ADMIN) -->
+    <div class="page" id="page-invoice">
+      <div class="page-hdr"><div><h1>Invoice PDF</h1><p>Buat tagihan untuk penyewa</p></div></div>
+      <div class="grid2" style="align-items:start">
+        <div class="card">
+          <div class="card-title">🧾 Form Invoice</div>
+          <div class="fg"><label>Pilih Penyewa *</label><select id="inv-ten" onchange="fillInvDefaults()"><option value="">-- Pilih --</option></select></div>
+          <div class="fr">
+            <div class="fg"><label>No. Invoice</label><input type="text" id="inv-no" placeholder="INV-001"></div>
+            <div class="fg"><label>Tanggal Invoice</label><input type="date" id="inv-dt"></div>
+          </div>
+          <div class="fg"><label>Periode (Bulan/Tahun)</label><input type="month" id="inv-period"></div>
+          <div class="fr">
+            <div class="fg"><label>Sewa (Rp)</label><input type="number" id="inv-rent" placeholder="0"></div>
+            <div class="fg"><label>Listrik (Rp)</label><input type="number" id="inv-elec" placeholder="0"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Air (Rp)</label><input type="number" id="inv-water" placeholder="0"></div>
+            <div class="fg"><label>Biaya Lain (Rp)</label><input type="number" id="inv-other" placeholder="0"></div>
+          </div>
+          <div class="fg"><label>Ket. Biaya Lain</label><input type="text" id="inv-otherdesc" placeholder="Denda keterlambatan, dll"></div>
+          <div class="fg"><label>Catatan Invoice</label><textarea id="inv-notes" placeholder="Pesan tambahan..."></textarea></div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="previewInv('admin')">👁 Preview</button>
+            <button class="btn btn-ghost" onclick="printInv()">🖨 Cetak / PDF</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-h);font-size:0.9rem;font-weight:600;margin-bottom:0.75rem">Preview Invoice</div>
+          <div id="inv-preview-admin"><div class="empty-state" style="background:var(--card);border-radius:10px">Isi form dan klik Preview.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPROVEMENTS -->
+    <div class="page" id="page-improvements">
+      <div class="page-hdr">
+        <div><h1>Saran & Perbaikan</h1><p>Ide dari penyewa dan pengelola</p></div>
+        <button class="btn btn-primary" onclick="openModal('m-addimprove')">+ Tambah Saran</button>
+      </div>
+      <div class="card"><div id="improve-list"></div></div>
+    </div>
+
+    <!-- ANNOUNCEMENTS (ADMIN) -->
+    <div class="page" id="page-announcements">
+      <div class="page-hdr">
+        <div><h1>Pengumuman</h1><p>Kirim info/pengumuman ke seluruh penyewa</p></div>
+        <button class="btn btn-primary" onclick="openModal('m-announce')">+ Buat Pengumuman</button>
+      </div>
+      <div id="announce-list"><div class="empty-state">Belum ada pengumuman.</div></div>
+    </div>
+
+    <!-- ===== TENANT PAGES ===== -->
+
+    <!-- TENANT HOME -->
+    <div class="page" id="page-tenant-home">
+      <div id="tenant-hero-area"></div>
+      <div id="tenant-notifs"></div>
+      <div class="grid2">
+        <div class="card"><div class="card-title">💳 Riwayat Pembayaran Saya</div><div class="tw">
+          <table><thead><tr><th>Jumlah</th><th>Tanggal</th><th>Jenis</th><th>Status</th></tr></thead>
+          <tbody id="t-pay-tbody"></tbody></table>
+        </div></div>
+        <div class="card"><div class="card-title">🔧 Laporan Maintenance Saya</div>
+          <div id="t-maint-list"></div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:0.75rem" onclick="showPage('page-tenant-maintenance')">+ Laporkan Masalah</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TENANT INVOICE -->
+    <div class="page" id="page-tenant-invoice">
+      <div class="page-hdr"><div><h1>Invoice Saya</h1><p>Buat dan cetak invoice tagihan Anda</p></div></div>
+      <div class="grid2" style="align-items:start">
+        <div class="card">
+          <div class="card-title">🧾 Buat Invoice</div>
+          <div id="tenant-inv-info" style="background:var(--bg);border-radius:8px;padding:0.85rem;margin-bottom:1rem;font-size:0.84rem;color:var(--muted)">Login sebagai penyewa untuk mengisi otomatis.</div>
+          <div class="fr">
+            <div class="fg"><label>No. Invoice</label><input type="text" id="tinv-no" placeholder="INV-001"></div>
+            <div class="fg"><label>Tanggal</label><input type="date" id="tinv-dt"></div>
+          </div>
+          <div class="fg"><label>Periode</label><input type="month" id="tinv-period"></div>
+          <div class="fr">
+            <div class="fg"><label>Sewa (Rp)</label><input type="number" id="tinv-rent" placeholder="0"></div>
+            <div class="fg"><label>Listrik (Rp)</label><input type="number" id="tinv-elec" placeholder="0"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Air (Rp)</label><input type="number" id="tinv-water" placeholder="0"></div>
+            <div class="fg"><label>Biaya Lain (Rp)</label><input type="number" id="tinv-other" placeholder="0"></div>
+          </div>
+          <div class="fg"><label>Ket. Biaya Lain</label><input type="text" id="tinv-otherdesc" placeholder="Denda, dll"></div>
+          <div class="fg"><label>Catatan</label><textarea id="tinv-notes" placeholder="Catatan tambahan..."></textarea></div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn-teal" onclick="previewInv('tenant')">👁 Preview</button>
+            <button class="btn btn-ghost" onclick="printInv()">🖨 Cetak / PDF</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-h);font-size:0.9rem;font-weight:600;margin-bottom:0.75rem">Preview Invoice</div>
+          <div id="inv-preview-tenant"><div class="empty-state" style="background:var(--card);border-radius:10px">Klik Preview untuk melihat tampilan.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TENANT MAINTENANCE -->
+    <div class="page" id="page-tenant-maintenance">
+      <div class="page-hdr"><div><h1>Laporan Maintenance</h1><p>Laporkan masalah di kamar Anda</p></div></div>
+      <div class="grid2" style="align-items:start">
+        <div class="card">
+          <div class="card-title">+ Laporkan Masalah Baru</div>
+          <div class="fg"><label>Judul Masalah *</label><input type="text" id="tm-title" placeholder="cth: Keran bocor, lampu mati..."></div>
+          <div class="fg"><label>Deskripsi</label><textarea id="tm-desc" placeholder="Jelaskan detail masalahnya..."></textarea></div>
+          <div class="fg"><label>Prioritas</label><select id="tm-prio"><option>Rendah</option><option>Sedang</option><option>Tinggi</option><option>Darurat</option></select></div>
+          <button class="btn btn-primary" onclick="tenantReportMaint()">Kirim Laporan</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Laporan Saya</div>
+          <div id="t-maint-full-list"><div class="empty-state">Belum ada laporan.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TENANT PAYMENTS -->
+    <div class="page" id="page-tenant-payments">
+      <div class="page-hdr"><div><h1>Riwayat Pembayaran</h1><p>Semua transaksi sewa Anda</p></div></div>
+      <div class="grid3" style="margin-bottom:1.25rem">
+        <div class="stat s-green"><div class="stat-lbl">Total Dibayar</div><div class="stat-val" id="tp-paid" style="font-size:1.1rem">Rp 0</div></div>
+        <div class="stat s-red"><div class="stat-lbl">Belum Lunas</div><div class="stat-val" id="tp-out" style="font-size:1.1rem">Rp 0</div></div>
+        <div class="stat s-blue"><div class="stat-lbl">Total Transaksi</div><div class="stat-val" id="tp-cnt">0</div></div>
+      </div>
+      <div class="card"><div class="tw">
+        <table><thead><tr><th>Jumlah</th><th>Tanggal</th><th>Jenis</th><th>Status</th><th>Catatan</th></tr></thead>
+        <tbody id="tp-tbody"></tbody></table>
+      </div></div>
+    </div>
+
+    <!-- TENANT ANNOUNCEMENTS -->
+    <div class="page" id="page-tenant-announce">
+      <div class="page-hdr"><div><h1>Pengumuman</h1><p>Info terbaru dari pengelola kost</p></div></div>
+      <div id="t-announce-list"><div class="empty-state">Belum ada pengumuman.</div></div>
+    </div>
+
+    <!-- TENANT SUGGESTIONS -->
+    <div class="page" id="page-tenant-suggest">
+      <div class="page-hdr">
+        <div><h1>Saran Saya</h1><p>Sampaikan ide untuk kost yang lebih baik</p></div>
+        <button class="btn btn-primary" onclick="openModal('m-addimprove')">+ Kirim Saran</button>
+      </div>
+      <div class="card"><div id="t-improve-list"></div></div>
+    </div>
+
+  </main>
+</div>
 
 <!-- ===== MODALS ===== -->
 
 <!-- Add Room -->
-<div class="modal-overlay" id="modal-addroom">
+<div class="mo" id="m-addroom">
   <div class="modal">
     <div class="modal-title">Tambah Kamar</div>
-    <div class="form-row">
-      <div class="form-group"><label>Nomor Kamar *</label><input type="text" id="r-num" placeholder="cth: 101"></div>
-      <div class="form-group"><label>Lantai</label><input type="text" id="r-floor" placeholder="cth: 1"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Tipe Kamar</label>
-        <select id="r-type"><option>Single</option><option>Double</option><option>Bersama</option><option>Studio</option></select>
-      </div>
-      <div class="form-group"><label>Harga Sewa/Bulan (Rp) *</label><input type="number" id="r-rate" placeholder="1500000"></div>
-    </div>
-    <div class="form-group"><label>Status Awal</label>
-      <select id="r-status"><option value="vacant">Kosong</option><option value="maintenance">Dalam Perbaikan</option></select>
-    </div>
-    <div class="form-group"><label>Fasilitas (opsional)</label><input type="text" id="r-facilities" placeholder="cth: AC, kamar mandi dalam, WiFi"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-addroom')">Batal</button>
-      <button class="btn btn-primary" onclick="addRoom()">Simpan Kamar</button>
-    </div>
+    <div class="fr"><div class="fg"><label>Nomor Kamar *</label><input type="text" id="r-num" placeholder="101"></div><div class="fg"><label>Lantai</label><input type="text" id="r-fl" placeholder="1"></div></div>
+    <div class="fr"><div class="fg"><label>Tipe</label><select id="r-type"><option>Single</option><option>Double</option><option>Bersama</option><option>Studio</option></select></div><div class="fg"><label>Harga/Bulan (Rp) *</label><input type="number" id="r-rate" placeholder="1500000"></div></div>
+    <div class="fg"><label>Status Awal</label><select id="r-status"><option value="vacant">Kosong</option><option value="maintenance">Perbaikan</option></select></div>
+    <div class="fg"><label>Fasilitas</label><input type="text" id="r-fac" placeholder="AC, WiFi, kamar mandi dalam..."></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-addroom')">Batal</button><button class="btn btn-primary" onclick="addRoom()">Simpan</button></div>
   </div>
 </div>
 
 <!-- Add Tenant -->
-<div class="modal-overlay" id="modal-addtenant">
+<div class="mo" id="m-addtenant">
   <div class="modal">
     <div class="modal-title">Tambah Penyewa</div>
-    <div class="form-row">
-      <div class="form-group"><label>Nama Lengkap *</label><input type="text" id="t-name" placeholder="Budi Santoso"></div>
-      <div class="form-group"><label>No. HP *</label><input type="text" id="t-phone" placeholder="08xx-xxxx-xxxx"></div>
-    </div>
-    <div class="form-group"><label>Pilih Kamar *</label>
-      <select id="t-room">
-        <option value="">-- Pilih Kamar Kosong --</option>
-      </select>
-      <div id="t-room-msg" style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Harga Sewa/Bulan (Rp) *</label><input type="number" id="t-rent" placeholder="1500000"></div>
-      <div class="form-group"><label>Tanggal Masuk *</label><input type="date" id="t-movein"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Tanggal Jatuh Tempo (tgl)</label><input type="number" id="t-dueday" placeholder="1-28" min="1" max="28"></div>
-      <div class="form-group"><label>KTP / ID</label><input type="text" id="t-ktp" placeholder="Nomor KTP"></div>
-    </div>
-    <div class="form-group"><label>Kontak Darurat</label><input type="text" id="t-emergency" placeholder="Nama & nomor"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-addtenant')">Batal</button>
-      <button class="btn btn-primary" onclick="addTenant()">Simpan Penyewa</button>
-    </div>
+    <div class="fr"><div class="fg"><label>Nama Lengkap *</label><input type="text" id="tn-name" placeholder="Budi Santoso"></div><div class="fg"><label>No. HP *</label><input type="text" id="tn-phone" placeholder="08xx-xxxx-xxxx"></div></div>
+    <div class="fg"><label>Pilih Kamar Kosong *</label><select id="tn-room"><option value="">-- Pilih --</option></select><div id="tn-room-msg" style="font-size:0.74rem;color:var(--muted);margin-top:0.3rem"></div></div>
+    <div class="fr"><div class="fg"><label>Harga Sewa/Bulan (Rp) *</label><input type="number" id="tn-rent" placeholder="1500000"></div><div class="fg"><label>Tgl Masuk *</label><input type="date" id="tn-movein"></div></div>
+    <div class="fr"><div class="fg"><label>Jatuh Tempo (tgl)</label><input type="number" id="tn-due" placeholder="1-28" min="1" max="28"></div><div class="fg"><label>No. KTP</label><input type="text" id="tn-ktp" placeholder="NIK"></div></div>
+    <div class="fg"><label>Kontak Darurat</label><input type="text" id="tn-emg" placeholder="Nama & nomor HP"></div>
+    <div class="fg"><label>PIN Login (4-6 digit) *</label><input type="password" id="tn-pin" placeholder="Akan digunakan sebagai password" maxlength="6"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-addtenant')">Batal</button><button class="btn btn-primary" onclick="addTenant()">Simpan Penyewa</button></div>
   </div>
 </div>
 
 <!-- Add Payment -->
-<div class="modal-overlay" id="modal-addpayment">
+<div class="mo" id="m-addpay">
   <div class="modal">
     <div class="modal-title">Catat Pembayaran</div>
-    <div class="form-group"><label>Pilih Penyewa *</label><select id="p-tenant"><option value="">-- Pilih --</option></select></div>
-    <div class="form-row">
-      <div class="form-group"><label>Jumlah (Rp) *</label><input type="number" id="p-amount" placeholder="1500000"></div>
-      <div class="form-group"><label>Tanggal *</label><input type="date" id="p-date"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Jenis</label>
-        <select id="p-type"><option>Sewa</option><option>Deposit</option><option>Listrik</option><option>Air</option><option>Denda</option><option>Lainnya</option></select>
-      </div>
-      <div class="form-group"><label>Status</label>
-        <select id="p-status"><option value="paid">Lunas</option><option value="pending">Menunggu</option><option value="overdue">Jatuh Tempo</option></select>
-      </div>
-    </div>
-    <div class="form-group"><label>Catatan</label><input type="text" id="p-notes" placeholder="Catatan opsional"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-addpayment')">Batal</button>
-      <button class="btn btn-primary" onclick="addPayment()">Simpan</button>
-    </div>
+    <div class="fg"><label>Penyewa *</label><select id="pay-ten"><option value="">-- Pilih --</option></select></div>
+    <div class="fr"><div class="fg"><label>Jumlah (Rp) *</label><input type="number" id="pay-amt" placeholder="1500000"></div><div class="fg"><label>Tanggal *</label><input type="date" id="pay-dt"></div></div>
+    <div class="fr"><div class="fg"><label>Jenis</label><select id="pay-type"><option>Sewa</option><option>Deposit</option><option>Listrik</option><option>Air</option><option>Denda</option><option>Lainnya</option></select></div><div class="fg"><label>Status</label><select id="pay-status"><option value="paid">Lunas</option><option value="pending">Menunggu</option><option value="overdue">Jatuh Tempo</option></select></div></div>
+    <div class="fg"><label>Catatan</label><input type="text" id="pay-note" placeholder="Opsional"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-addpay')">Batal</button><button class="btn btn-primary" onclick="addPayment()">Simpan</button></div>
   </div>
 </div>
 
 <!-- Add Maintenance -->
-<div class="modal-overlay" id="modal-addmaint">
+<div class="mo" id="m-addmaint">
   <div class="modal">
-    <div class="modal-title">Laporkan Masalah</div>
-    <div class="form-row">
-      <div class="form-group"><label>Kamar</label><select id="m-room"><option value="">-- Pilih --</option></select></div>
-      <div class="form-group"><label>Prioritas</label>
-        <select id="m-priority"><option>Rendah</option><option>Sedang</option><option>Tinggi</option><option>Darurat</option></select>
-      </div>
-    </div>
-    <div class="form-group"><label>Judul Masalah *</label><input type="text" id="m-title" placeholder="cth: Keran bocor"></div>
-    <div class="form-group"><label>Deskripsi</label><textarea id="m-desc" placeholder="Jelaskan masalahnya..."></textarea></div>
-    <div class="form-group"><label>Dilaporkan Oleh</label><input type="text" id="m-by" placeholder="Nama penyewa atau pengelola"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-addmaint')">Batal</button>
-      <button class="btn btn-primary" onclick="addMaintenance()">Simpan</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add Improvement -->
-<div class="modal-overlay" id="modal-addimprove">
-  <div class="modal">
-    <div class="modal-title">Tambah Saran</div>
-    <div class="form-group"><label>Kategori</label>
-      <select id="i-cat"><option>Fasilitas</option><option>Peraturan</option><option>Kebersihan</option><option>Keamanan</option><option>Amenitas</option><option>Lainnya</option></select>
-    </div>
-    <div class="form-group"><label>Saran *</label><textarea id="i-text" placeholder="Tulis saran atau masukan..."></textarea></div>
-    <div class="form-group"><label>Disampaikan Oleh (opsional)</label><input type="text" id="i-by" placeholder="Anonim atau nama"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-addimprove')">Batal</button>
-      <button class="btn btn-primary" onclick="addImprovement()">Kirim</button>
-    </div>
+    <div class="modal-title">Laporkan Masalah Maintenance</div>
+    <div class="fr"><div class="fg"><label>Kamar</label><select id="ma-room"><option value="">-- Pilih --</option></select></div><div class="fg"><label>Prioritas</label><select id="ma-prio"><option>Rendah</option><option>Sedang</option><option>Tinggi</option><option>Darurat</option></select></div></div>
+    <div class="fg"><label>Judul Masalah *</label><input type="text" id="ma-title" placeholder="Keran bocor, listrik mati..."></div>
+    <div class="fg"><label>Deskripsi</label><textarea id="ma-desc" placeholder="Detail masalah..."></textarea></div>
+    <div class="fg"><label>Dilaporkan Oleh</label><input type="text" id="ma-by" placeholder="Nama atau 'Pengelola'"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-addmaint')">Batal</button><button class="btn btn-primary" onclick="addMaintenance()">Laporkan</button></div>
   </div>
 </div>
 
 <!-- Room Detail -->
-<div class="modal-overlay" id="modal-roomdetail">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-title" id="rd-title">Detail Kamar</div>
-    <div id="rd-content"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('modal-roomdetail')">Tutup</button></div>
+<div class="mo" id="m-roomdetail">
+  <div class="modal" style="max-width:520px"><div class="modal-title" id="rd-title">Detail Kamar</div><div id="rd-content"></div>
+  <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-roomdetail')">Tutup</button></div></div>
+</div>
+
+<!-- Announcement -->
+<div class="mo" id="m-announce">
+  <div class="modal">
+    <div class="modal-title">Buat Pengumuman</div>
+    <div class="fg"><label>Judul *</label><input type="text" id="ann-title" placeholder="Pengumuman penting..."></div>
+    <div class="fg"><label>Isi Pengumuman *</label><textarea id="ann-body" placeholder="Tulis isi pengumuman..."></textarea></div>
+    <div class="fg"><label>Tipe</label><select id="ann-type"><option value="info">Info</option><option value="warn">Peringatan</option><option value="ok">Kabar Baik</option></select></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-announce')">Batal</button><button class="btn btn-primary" onclick="addAnnouncement()">Kirim</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast">✓ Berhasil</div>
+<!-- Improvement -->
+<div class="mo" id="m-addimprove">
+  <div class="modal">
+    <div class="modal-title">Kirim Saran</div>
+    <div class="fg"><label>Kategori</label><select id="imp-cat"><option>Fasilitas</option><option>Peraturan</option><option>Kebersihan</option><option>Keamanan</option><option>Amenitas</option><option>Lainnya</option></select></div>
+    <div class="fg"><label>Saran *</label><textarea id="imp-text" placeholder="Tulis ide atau masukan Anda..."></textarea></div>
+    <div class="fg"><label>Dari (opsional)</label><input type="text" id="imp-by" placeholder="Anonim atau nama"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('m-addimprove')">Batal</button><button class="btn btn-primary" onclick="addImprovement()">Kirim</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ===== STATE =====
-let rooms = [], tenants = [], payments = [], logs = [], maintenance = [], improvements = [];
-let activities = [{text:'Sistem diinisialisasi', time: fmtNow(), type:'info'}];
-let invCounter = 1;
+// ============================================================
+// STATE
+// ============================================================
+let rooms=[], tenants=[], payments=[], logs=[], maintenance=[], improvements=[], announcements=[];
+let activities=[{text:'Sistem diinisialisasi',time:fmtNow(),type:'info'}];
+let invNo=1;
+let currentRole=null, currentUser=null, currentTenantId=null;
+const ADMIN_CREDS={user:'admin',pass:'admin123'};
 
-// ===== INIT =====
-window.onload = () => {
-  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  setInterval(() => document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}), 1000);
-  document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
-  const now = new Date().toISOString().slice(0,16);
-  document.getElementById('ci-date').value = now;
-  document.getElementById('co-date').value = now;
-  document.getElementById('p-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('inv-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('inv-period').value = new Date().toISOString().slice(0,7);
-  document.getElementById('inv-number').value = 'INV-001';
-  renderAll();
-};
+// ============================================================
+// UTILS
+// ============================================================
+function fmtNow(){return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}
+function fmtIDR(n){return 'Rp '+Number(n||0).toLocaleString('id-ID');}
+function fmtDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});}
+function uid(){return Date.now()+Math.random().toString(36).slice(2,6);}
 
-function fmtNow() { return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
-function fmtIDR(n) { return 'Rp ' + Number(n||0).toLocaleString('id-ID'); }
+// ============================================================
+// CLOCK
+// ============================================================
+setInterval(()=>{const el=document.getElementById('liveTime');if(el)el.textContent=fmtNow();},1000);
 
-// ===== NAV =====
-function showPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+// ============================================================
+// LOGIN
+// ============================================================
+function switchLoginTab(tab, btn){
+  document.querySelectorAll('.login-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(id==='payments') renderPaymentStats();
-  if(id==='invoice') { populateTenantSelect('inv-tenant'); updateInvCounter(); }
+  document.getElementById('login-admin').style.display=tab==='admin'?'block':'none';
+  document.getElementById('login-tenant').style.display=tab==='tenant'?'block':'none';
+  if(tab==='tenant') refreshTenantLoginSelect();
 }
 
-// ===== MODAL =====
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
+function refreshTenantLoginSelect(){
+  const sel=document.getElementById('t-login-select');
+  sel.innerHTML='<option value="">-- Pilih nama --</option>'+tenants.map(t=>`<option value="${t.id}">${t.name} (Kamar ${t.room})</option>`).join('');
+}
 
-function openAddTenantModal() {
-  // Populate vacant rooms fresh every time
-  const sel = document.getElementById('t-room');
-  const vacantRooms = rooms.filter(r => r.status === 'vacant');
-  if(vacantRooms.length === 0) {
-    sel.innerHTML = '<option value="">-- Tidak ada kamar kosong --</option>';
-    document.getElementById('t-room-msg').textContent = '⚠ Tambahkan kamar kosong terlebih dahulu di menu Kamar.';
+function loginAdmin(){
+  const u=document.getElementById('a-user').value.trim();
+  const p=document.getElementById('a-pass').value;
+  if(u===ADMIN_CREDS.user && p===ADMIN_CREDS.pass){
+    currentRole='admin'; currentUser='Administrator';
+    startApp();
   } else {
-    sel.innerHTML = '<option value="">-- Pilih Kamar Kosong --</option>' +
-      vacantRooms.map(r => `<option value="${r.num}">Kamar ${r.num} — ${r.type} — ${fmtIDR(r.rate)}/bln${r.facilities ? ' ['+r.facilities+']':''}</option>`).join('');
-    document.getElementById('t-room-msg').textContent = vacantRooms.length + ' kamar tersedia.';
+    document.getElementById('a-err').textContent='Username atau password salah.';
   }
-  openModal('modal-addtenant');
 }
 
-// ===== TOAST =====
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2600);
+function loginTenant(){
+  const tid=document.getElementById('t-login-select').value;
+  const pass=document.getElementById('t-pass').value;
+  if(!tid){document.getElementById('t-err').textContent='Pilih nama Anda.';return;}
+  const t=tenants.find(x=>x.id==tid);
+  if(!t){document.getElementById('t-err').textContent='Penyewa tidak ditemukan.';return;}
+  // Accept pin OR '1234' as demo fallback
+  if(pass===t.pin || pass==='1234'){
+    currentRole='tenant'; currentUser=t.name; currentTenantId=t.id;
+    startApp();
+  } else {
+    document.getElementById('t-err').textContent='Password salah. Gunakan PIN yang didaftarkan atau "1234".';
+  }
 }
 
-// ===== ACTIVITY =====
-function logActivity(text, type='info') {
-  activities.unshift({text, time:fmtNow(), type});
-  if(activities.length>12) activities.pop();
-  renderActivity();
-}
-function renderActivity() {
-  const colors = {info:'var(--accent)',success:'#3dd68c',warning:'#f5c842',danger:'#ff5c5c'};
-  const el = document.getElementById('activity-list');
-  el.innerHTML = activities.map(a=>`<div class="activity-item"><div class="act-dot" style="background:${colors[a.type]||colors.info}"></div><div style="flex:1">${a.text}</div><div class="act-time">${a.time}</div></div>`).join('');
-}
-
-// ===== STATS =====
-function updateStats() {
-  document.getElementById('s-total').textContent = rooms.length;
-  document.getElementById('s-occupied').textContent = rooms.filter(r=>r.status==='occupied').length;
-  document.getElementById('s-vacant').textContent = rooms.filter(r=>r.status==='vacant').length;
-  document.getElementById('s-overdue').textContent = payments.filter(p=>p.status==='overdue').length;
+function startApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('sb-role').textContent=currentRole==='admin'?'Admin Panel':'Portal Penyewa';
+  document.getElementById('sb-user').textContent=currentUser;
+  document.getElementById('todayDate').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  buildNav();
+  initDefaults();
+  if(currentRole==='admin'){
+    showPage('page-dashboard');
+    renderAll();
+  } else {
+    showPage('page-tenant-home');
+    renderTenantHome();
+  }
 }
 
-// ===== ROOMS =====
-function addRoom() {
-  const num = document.getElementById('r-num').value.trim();
-  const rate = document.getElementById('r-rate').value.trim();
-  if(!num) { toast('⚠ Nomor kamar wajib diisi'); return; }
-  if(!rate) { toast('⚠ Harga sewa wajib diisi'); return; }
-  if(rooms.find(r=>r.num===num)) { toast('⚠ Kamar sudah ada'); return; }
-  rooms.push({
-    id: Date.now(), num,
-    floor: document.getElementById('r-floor').value,
-    type: document.getElementById('r-type').value,
-    rate: Number(rate),
-    status: document.getElementById('r-status').value,
-    facilities: document.getElementById('r-facilities').value,
-    tenantId: null
-  });
-  closeModal('modal-addroom');
-  ['r-num','r-floor','r-rate','r-facilities'].forEach(id=>document.getElementById(id).value='');
-  renderRooms(); updateStats();
-  logActivity(`Kamar ${num} ditambahkan`, 'success');
-  toast(`✓ Kamar ${num} berhasil ditambahkan`);
+function logout(){
+  currentRole=null; currentUser=null; currentTenantId=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('a-err').textContent='';
+  document.getElementById('t-err').textContent='';
 }
 
-function renderRooms(filter='all') {
-  const grid = document.getElementById('rooms-grid');
-  const list = filter==='all' ? rooms : rooms.filter(r=>r.status===filter);
-  if(!rooms.length) { grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Belum ada kamar. Klik "+ Tambah Kamar".</div>'; return; }
-  if(!list.length) { grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Tidak ada kamar dengan filter ini.</div>'; return; }
-  grid.innerHTML = list.map(r => {
-    const dot = r.status==='occupied'?'dot-green':r.status==='maintenance'?'dot-orange':'dot-gray';
-    const statusLabel = r.status==='occupied'?'Terisi':r.status==='maintenance'?'Perbaikan':'Kosong';
-    const statusColor = r.status==='occupied'?'var(--green)':r.status==='maintenance'?'var(--orange)':'var(--muted)';
-    const t = tenants.find(t=>t.room===r.num);
-    return `<div class="room-tile ${r.status}" onclick="showRoomDetail('${r.num}')">
-      <div class="room-dot ${dot}"></div>
-      <div class="room-num">${r.num}</div>
-      <div class="room-type">${r.type}</div>
-      <div class="room-status-label" style="color:${statusColor}">${statusLabel}</div>
-      <div class="room-tenant-name">${t ? t.name : fmtIDR(r.rate)+'/bln'}</div>
-    </div>`;
+// ============================================================
+// NAV
+// ============================================================
+const adminNav=[
+  {label:'Dashboard',icon:'📊',page:'page-dashboard'},
+  {label:'Kamar',icon:'🚪',page:'page-rooms'},
+  {label:'Penyewa',icon:'👥',page:'page-tenants'},
+  {section:'Keuangan'},
+  {label:'Pembayaran',icon:'💳',page:'page-payments'},
+  {label:'Invoice PDF',icon:'🧾',page:'page-invoice'},
+  {section:'Operasional'},
+  {label:'Check-in/out',icon:'📋',page:'page-checkinout'},
+  {label:'Maintenance',icon:'🔧',page:'page-maintenance'},
+  {section:'Komunitas'},
+  {label:'Pengumuman',icon:'📢',page:'page-announcements'},
+  {label:'Saran & Perbaikan',icon:'💡',page:'page-improvements'},
+];
+const tenantNav=[
+  {label:'Beranda Saya',icon:'🏠',page:'page-tenant-home'},
+  {section:'Keuangan'},
+  {label:'Riwayat Bayar',icon:'💳',page:'page-tenant-payments'},
+  {label:'Invoice Saya',icon:'🧾',page:'page-tenant-invoice'},
+  {section:'Layanan'},
+  {label:'Laporan Maintenance',icon:'🔧',page:'page-tenant-maintenance'},
+  {section:'Info'},
+  {label:'Pengumuman',icon:'📢',page:'page-tenant-announce'},
+  {label:'Kirim Saran',icon:'💡',page:'page-tenant-suggest'},
+];
+
+function buildNav(){
+  const nav=document.getElementById('main-nav');
+  const items=currentRole==='admin'?adminNav:tenantNav;
+  nav.innerHTML=items.map(it=>{
+    if(it.section) return `<div class="nav-section">${it.section}</div>`;
+    return `<button class="nav-item" onclick="showPage('${it.page}')" data-page="${it.page}"><span class="nav-icon">${it.icon}</span>${it.label}</button>`;
   }).join('');
 }
 
-function filterRooms(f) { renderRooms(f); }
+function showPage(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById(pageId);
+  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.toggle('active', n.getAttribute('data-page')===pageId);
+  });
+  if(pageId==='page-payments') renderPayStats();
+  if(pageId==='page-invoice'){populateSel('inv-ten',tenants);}
+  if(pageId==='page-tenant-home') renderTenantHome();
+  if(pageId==='page-tenant-payments') renderTenantPayments();
+  if(pageId==='page-tenant-invoice') fillTenantInvDefaults();
+  if(pageId==='page-tenant-maintenance') renderTenantMaint();
+  if(pageId==='page-tenant-announce') renderTenantAnnounce();
+  if(pageId==='page-tenant-suggest') renderTenantSuggest();
+}
 
-function showRoomDetail(num) {
-  const r = rooms.find(x=>x.num===num);
-  const t = tenants.find(x=>x.room===num);
-  const pays = payments.filter(p=>p.room===num);
-  document.getElementById('rd-title').textContent = `Kamar ${num}`;
-  document.getElementById('rd-content').innerHTML = `
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('click',e=>{if(e.target.classList.contains('mo'))e.target.classList.remove('open');});
+
+function openAddTenantModal(){
+  const sel=document.getElementById('tn-room');
+  const vacant=rooms.filter(r=>r.status==='vacant');
+  sel.innerHTML='<option value="">-- Pilih --</option>'+vacant.map(r=>`<option value="${r.num}">Kamar ${r.num} — ${r.type} — ${fmtIDR(r.rate)}/bln</option>`).join('');
+  document.getElementById('tn-room-msg').textContent=vacant.length?`${vacant.length} kamar tersedia`:'⚠ Tidak ada kamar kosong';
+  openModal('m-addtenant');
+}
+
+function openMaintModal(){
+  const sel=document.getElementById('ma-room');
+  sel.innerHTML='<option value="">-- Pilih --</option>'+rooms.map(r=>`<option value="${r.num}">Kamar ${r.num}</option>`).join('');
+  openModal('m-addmaint');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ============================================================
+// ACTIVITY
+// ============================================================
+function logAct(text,type='info'){
+  activities.unshift({text,time:fmtNow(),type});
+  if(activities.length>15)activities.pop();
+  renderActivity();
+}
+function renderActivity(){
+  const c={info:'var(--accent)',success:'var(--green)',warning:'var(--yellow)',danger:'var(--red)'};
+  const el=document.getElementById('dash-activity');
+  if(!el)return;
+  el.innerHTML=activities.map(a=>`<div class="ai"><div class="adot" style="background:${c[a.type]||c.info}"></div><div style="flex:1">${a.text}</div><div class="atime">${a.time}</div></div>`).join('');
+}
+
+// ============================================================
+// STATS
+// ============================================================
+function updateStats(){
+  document.getElementById('s-total').textContent=rooms.length;
+  document.getElementById('s-occ').textContent=rooms.filter(r=>r.status==='occupied').length;
+  document.getElementById('s-vac').textContent=rooms.filter(r=>r.status==='vacant').length;
+  document.getElementById('s-over').textContent=payments.filter(p=>p.status==='overdue').length;
+  const m=new Date().getMonth();
+  const inc=payments.filter(p=>p.status==='paid'&&new Date(p.date).getMonth()===m).reduce((s,p)=>s+p.amount,0);
+  document.getElementById('s-income').textContent=fmtIDR(inc);
+}
+
+// ============================================================
+// ROOMS
+// ============================================================
+function addRoom(){
+  const num=document.getElementById('r-num').value.trim();
+  const rate=document.getElementById('r-rate').value;
+  if(!num||!rate){toast('⚠ Nomor dan harga wajib diisi');return;}
+  if(rooms.find(r=>r.num===num)){toast('⚠ Kamar sudah ada');return;}
+  rooms.push({id:uid(),num,floor:document.getElementById('r-fl').value,type:document.getElementById('r-type').value,rate:Number(rate),status:document.getElementById('r-status').value,facilities:document.getElementById('r-fac').value,tenantId:null});
+  closeModal('m-addroom');
+  ['r-num','r-fl','r-rate','r-fac'].forEach(i=>document.getElementById(i).value='');
+  renderRooms();updateStats();logAct(`Kamar ${num} ditambahkan`,'success');toast(`✓ Kamar ${num} ditambahkan`);
+}
+
+function renderRooms(filter='all'){
+  const grid=document.getElementById('rooms-grid');
+  const list=filter==='all'?rooms:rooms.filter(r=>r.status===filter);
+  if(!rooms.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Belum ada kamar. Klik "+ Tambah Kamar".</div>';return;}
+  if(!list.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Tidak ada kamar dengan filter ini.</div>';return;}
+  grid.innerHTML=list.map(r=>{
+    const dot=r.status==='occupied'?'dg':r.status==='maintenance'?'do':'dm';
+    const sc=r.status==='occupied'?'var(--green)':r.status==='maintenance'?'var(--orange)':'var(--muted)';
+    const sl=r.status==='occupied'?'Terisi':r.status==='maintenance'?'Perbaikan':'Kosong';
+    const t=tenants.find(t=>t.room===r.num);
+    return `<div class="rtile ${r.status}" onclick="showRoomDetail('${r.num}')"><div class="rdot ${dot}"></div><div class="rnum">${r.num}</div><div class="rtype">${r.type}</div><div class="rstatus" style="color:${sc}">${sl}</div><div class="rtenant">${t?t.name:fmtIDR(r.rate)+'/bln'}</div></div>`;
+  }).join('');
+}
+function filterRooms(f){renderRooms(f);}
+
+function showRoomDetail(num){
+  const r=rooms.find(x=>x.num===num);
+  const t=tenants.find(x=>x.room===num);
+  const pays=payments.filter(p=>p.room===num);
+  document.getElementById('rd-title').textContent=`Kamar ${num}`;
+  document.getElementById('rd-content').innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:1rem">
-      <div><div style="font-size:0.7rem;color:var(--muted)">Tipe</div><div>${r.type}</div></div>
-      <div><div style="font-size:0.7rem;color:var(--muted)">Lantai</div><div>${r.floor||'—'}</div></div>
-      <div><div style="font-size:0.7rem;color:var(--muted)">Harga Sewa</div><div>${fmtIDR(r.rate)}/bln</div></div>
-      <div><div style="font-size:0.7rem;color:var(--muted)">Status</div><div>${r.status==='occupied'?'Terisi':r.status==='maintenance'?'Perbaikan':'Kosong'}</div></div>
-      ${r.facilities?`<div style="grid-column:1/-1"><div style="font-size:0.7rem;color:var(--muted)">Fasilitas</div><div>${r.facilities}</div></div>`:''}
+      <div><div style="font-size:0.69rem;color:var(--muted)">Tipe</div><div>${r.type}</div></div>
+      <div><div style="font-size:0.69rem;color:var(--muted)">Lantai</div><div>${r.floor||'—'}</div></div>
+      <div><div style="font-size:0.69rem;color:var(--muted)">Harga/Bulan</div><div>${fmtIDR(r.rate)}</div></div>
+      <div><div style="font-size:0.69rem;color:var(--muted)">Status</div><div>${r.status==='occupied'?'Terisi':r.status==='maintenance'?'Perbaikan':'Kosong'}</div></div>
+      ${r.facilities?`<div style="grid-column:1/-1"><div style="font-size:0.69rem;color:var(--muted)">Fasilitas</div><div style="font-size:0.84rem">${r.facilities}</div></div>`:''}
     </div>
-    ${t?`<div style="background:var(--bg);padding:0.75rem;border-radius:6px;margin-bottom:0.75rem">
-      <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.35rem">Penyewa Saat Ini</div>
-      <div style="font-weight:500">${t.name}</div>
-      <div style="font-size:0.79rem;color:var(--muted)">${t.phone} · Masuk: ${t.movein} · Jatuh tempo tgl ${t.dueday}</div>
+    ${t?`<div style="background:var(--bg);padding:0.75rem;border-radius:7px;margin-bottom:0.75rem">
+      <div style="font-size:0.69rem;color:var(--muted);margin-bottom:0.3rem">Penyewa Saat Ini</div>
+      <div style="font-weight:600">${t.name}</div>
+      <div style="font-size:0.8rem;color:var(--muted)">${t.phone} · Masuk: ${t.movein} · Jatuh tempo tgl ${t.due}</div>
     </div>`:'<div style="color:var(--muted);font-size:0.84rem;margin-bottom:0.75rem">Kamar kosong.</div>'}
-    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.4rem">Riwayat Pembayaran (${pays.length} transaksi)</div>
-    ${pays.length?pays.slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;font-size:0.81rem;padding:0.35rem 0;border-bottom:1px solid var(--border)"><span>${p.date}</span><span>${fmtIDR(p.amount)}</span><span class="badge badge-${p.status==='paid'?'green':p.status==='overdue'?'red':'yellow'}">${p.status==='paid'?'Lunas':p.status==='overdue'?'Jatuh Tempo':'Menunggu'}</span></div>`).join(''):'<div style="color:var(--muted);font-size:0.82rem">Belum ada pembayaran.</div>'}
+    <div style="font-size:0.69rem;color:var(--muted);margin-bottom:0.35rem">Pembayaran Terbaru</div>
+    ${pays.length?pays.slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;font-size:0.8rem;padding:0.32rem 0;border-bottom:1px solid var(--border)"><span>${p.date}</span><span>${fmtIDR(p.amount)}</span><span class="badge b-${p.status==='paid'?'green':p.status==='overdue'?'red':'yellow'}">${p.status==='paid'?'Lunas':p.status==='overdue'?'JT':'Menunggu'}</span></div>`).join(''):'<div style="color:var(--muted);font-size:0.82rem">Belum ada.</div>'}
     <div style="margin-top:1rem">
-      <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.35rem">Ubah Status</label>
-      <select onchange="changeRoomStatus('${num}',this.value)" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.65rem;color:var(--text);font-size:0.82rem">
+      <select onchange="changeRoomStatus('${num}',this.value)" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0.38rem 0.65rem;color:var(--text);font-size:0.82rem">
         <option ${r.status==='vacant'?'selected':''} value="vacant">Kosong</option>
         <option ${r.status==='occupied'?'selected':''} value="occupied">Terisi</option>
-        <option ${r.status==='maintenance'?'selected':''} value="maintenance">Dalam Perbaikan</option>
+        <option ${r.status==='maintenance'?'selected':''} value="maintenance">Perbaikan</option>
       </select>
-    </div>
-  `;
-  openModal('modal-roomdetail');
+    </div>`;
+  openModal('m-roomdetail');
+}
+function changeRoomStatus(num,status){
+  const r=rooms.find(x=>x.num===num);r.status=status;
+  renderRooms();updateStats();logAct(`Kamar ${num} → ${status==='vacant'?'Kosong':status==='occupied'?'Terisi':'Perbaikan'}`);toast(`Kamar ${num} diperbarui`);
 }
 
-function changeRoomStatus(num, status) {
-  const r = rooms.find(x=>x.num===num); r.status=status;
-  renderRooms(); updateStats();
-  logActivity(`Kamar ${num} → ${status==='vacant'?'Kosong':status==='occupied'?'Terisi':'Perbaikan'}`);
-  toast(`Kamar ${num} diperbarui`);
-}
-
-// ===== TENANTS =====
-function addTenant() {
-  const name = document.getElementById('t-name').value.trim();
-  const phone = document.getElementById('t-phone').value.trim();
-  const room = document.getElementById('t-room').value;
-  const rent = document.getElementById('t-rent').value;
-  const movein = document.getElementById('t-movein').value;
-  if(!name) { toast('⚠ Nama wajib diisi'); return; }
-  if(!room) { toast('⚠ Pilih kamar terlebih dahulu'); return; }
-  if(!rent) { toast('⚠ Harga sewa wajib diisi'); return; }
-  if(!movein) { toast('⚠ Tanggal masuk wajib diisi'); return; }
-  const t = {
-    id: Date.now(), name, phone,
-    room,
-    rent: Number(rent),
-    movein,
-    dueday: document.getElementById('t-dueday').value || 1,
-    ktp: document.getElementById('t-ktp').value,
-    emergency: document.getElementById('t-emergency').value,
-    status: 'active'
-  };
+// ============================================================
+// TENANTS
+// ============================================================
+function addTenant(){
+  const name=document.getElementById('tn-name').value.trim();
+  const phone=document.getElementById('tn-phone').value.trim();
+  const room=document.getElementById('tn-room').value;
+  const rent=document.getElementById('tn-rent').value;
+  const movein=document.getElementById('tn-movein').value;
+  const pin=document.getElementById('tn-pin').value;
+  if(!name||!phone||!room||!rent||!movein){toast('⚠ Lengkapi semua field wajib');return;}
+  if(!pin){toast('⚠ PIN login wajib diisi');return;}
+  const t={id:uid(),name,phone,room,rent:Number(rent),movein,due:document.getElementById('tn-due').value||1,ktp:document.getElementById('tn-ktp').value,emergency:document.getElementById('tn-emg').value,pin,status:'active'};
   tenants.push(t);
-  const r = rooms.find(x=>x.num===room);
-  if(r) { r.status='occupied'; r.tenantId=t.id; }
-  closeModal('modal-addtenant');
-  ['t-name','t-phone','t-rent','t-movein','t-dueday','t-ktp','t-emergency'].forEach(id=>document.getElementById(id).value='');
-  renderTenants(); renderRooms(); updateStats();
-  refreshAllTenantSelects();
-  renderUpcomingPayments();
-  logActivity(`${name} menempati Kamar ${room}`, 'success');
-  toast(`✓ ${name} berhasil ditambahkan`);
+  const r=rooms.find(x=>x.num===room);if(r){r.status='occupied';r.tenantId=t.id;}
+  closeModal('m-addtenant');
+  ['tn-name','tn-phone','tn-rent','tn-movein','tn-due','tn-ktp','tn-emg','tn-pin'].forEach(i=>document.getElementById(i).value='');
+  renderTenants();renderRooms();updateStats();refreshSelects();renderUpcoming();
+  logAct(`${name} menempati Kamar ${room}`,'success');toast(`✓ ${name} ditambahkan`);
 }
 
-function renderTenants() {
-  const tbody = document.getElementById('tenants-tbody');
-  if(!tenants.length) { tbody.innerHTML='<tr><td colspan="7" class="empty-state">Belum ada penyewa.</td></tr>'; return; }
-  tbody.innerHTML = tenants.map(t=>`
+function renderTenants(){
+  const tb=document.getElementById('tenants-tbody');
+  if(!tenants.length){tb.innerHTML='<tr><td colspan="7" class="empty-state">Belum ada penyewa.</td></tr>';return;}
+  tb.innerHTML=tenants.map(t=>`
     <tr>
       <td><strong>${t.name}</strong><br><span style="font-size:0.73rem;color:var(--muted)">${t.phone}</span></td>
       <td>Kamar ${t.room}</td>
-      <td>${t.movein||'—'}</td>
+      <td style="font-size:0.82rem">${t.movein||'—'}</td>
       <td>${fmtIDR(t.rent)}/bln</td>
-      <td>Tgl ${t.dueday}</td>
-      <td><span class="badge badge-${t.status==='active'?'green':'red'}">${t.status==='active'?'Aktif':'Non-aktif'}</span></td>
-      <td>
-        <button class="btn btn-danger btn-sm" onclick="removeTenant(${t.id})">Hapus</button>
-      </td>
+      <td>Tgl ${t.due}</td>
+      <td><span class="badge b-${t.status==='active'?'green':'red'}">${t.status==='active'?'Aktif':'Non-aktif'}</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="removeTenant('${t.id}')">Hapus</button></td>
     </tr>`).join('');
 }
 
-function removeTenant(id) {
-  const t = tenants.find(x=>x.id===id);
-  if(!t || !confirm(`Hapus penyewa ${t.name}?`)) return;
-  const r = rooms.find(x=>x.num===t.room);
-  if(r) { r.status='vacant'; r.tenantId=null; }
-  tenants = tenants.filter(x=>x.id!==id);
-  renderTenants(); renderRooms(); updateStats();
-  refreshAllTenantSelects();
-  renderUpcomingPayments();
-  logActivity(`${t.name} dihapus dari Kamar ${t.room}`, 'danger');
-  toast(`${t.name} dihapus`);
+function removeTenant(id){
+  const t=tenants.find(x=>x.id===id);
+  if(!t||!confirm(`Hapus ${t.name}?`))return;
+  const r=rooms.find(x=>x.num===t.room);if(r){r.status='vacant';r.tenantId=null;}
+  tenants=tenants.filter(x=>x.id!==id);
+  renderTenants();renderRooms();updateStats();refreshSelects();renderUpcoming();
+  logAct(`${t.name} dihapus`,'danger');toast(`${t.name} dihapus`);
 }
 
-function refreshAllTenantSelects() {
-  populateTenantSelect('p-tenant');
-  populateTenantSelect('inv-tenant');
-  const opts = '<option value="">-- Pilih --</option>' + tenants.filter(t=>t.status==='active').map(t=>`<option value="${t.id}">${t.name} (Km ${t.room})</option>`).join('');
-  ['ci-tenant','co-tenant'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=opts; });
+function populateSel(elId,list){
+  const sel=document.getElementById(elId);if(!sel)return;
+  sel.innerHTML='<option value="">-- Pilih --</option>'+list.map(t=>`<option value="${t.id}">${t.name} (Km ${t.room})</option>`).join('');
 }
-
-function populateTenantSelect(elId) {
-  const sel = document.getElementById(elId); if(!sel) return;
-  sel.innerHTML = '<option value="">-- Pilih --</option>' + tenants.map(t=>`<option value="${t.id}">${t.name} (Km ${t.room})</option>`).join('');
-}
-
-// ===== PAYMENTS =====
-function addPayment() {
-  const tid = document.getElementById('p-tenant').value;
-  const amt = document.getElementById('p-amount').value;
-  if(!tid||!amt) { toast('⚠ Penyewa dan jumlah wajib diisi'); return; }
-  const t = tenants.find(x=>x.id==tid);
-  payments.push({
-    id:Date.now(), tenantId:tid, tenant:t.name, room:t.room,
-    amount:Number(amt),
-    date:document.getElementById('p-date').value,
-    type:document.getElementById('p-type').value,
-    status:document.getElementById('p-status').value,
-    notes:document.getElementById('p-notes').value
+function refreshSelects(){
+  populateSel('pay-ten',tenants);
+  populateSel('inv-ten',tenants);
+  ['ci-ten','co-ten'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.innerHTML='<option value="">-- Pilih --</option>'+tenants.filter(t=>t.status==='active').map(t=>`<option value="${t.id}">${t.name} (Km ${t.room})</option>`).join('');
   });
-  closeModal('modal-addpayment');
-  ['p-amount','p-notes'].forEach(id=>document.getElementById(id).value='');
-  renderPayments(); renderPaymentStats(); updateStats();
-  logActivity(`Pembayaran ${fmtIDR(amt)} dari ${t.name}`, 'success');
-  toast('✓ Pembayaran dicatat');
 }
 
-function renderPayments() {
-  const tbody = document.getElementById('payments-tbody');
-  if(!payments.length) { tbody.innerHTML='<tr><td colspan="6" class="empty-state">Belum ada pembayaran.</td></tr>'; return; }
-  tbody.innerHTML = [...payments].reverse().map(p=>`
+// ============================================================
+// PAYMENTS
+// ============================================================
+function addPayment(){
+  const tid=document.getElementById('pay-ten').value;
+  const amt=document.getElementById('pay-amt').value;
+  if(!tid||!amt){toast('⚠ Penyewa dan jumlah wajib diisi');return;}
+  const t=tenants.find(x=>x.id===tid);
+  payments.push({id:uid(),tenantId:tid,tenant:t.name,room:t.room,amount:Number(amt),date:document.getElementById('pay-dt').value,type:document.getElementById('pay-type').value,status:document.getElementById('pay-status').value,notes:document.getElementById('pay-note').value});
+  closeModal('m-addpay');
+  ['pay-amt','pay-note'].forEach(i=>document.getElementById(i).value='');
+  renderPayments();renderPayStats();updateStats();
+  logAct(`Pembayaran ${fmtIDR(amt)} dari ${t.name}`,'success');toast('✓ Pembayaran dicatat');
+}
+
+function renderPayments(){
+  const tb=document.getElementById('payments-tbody');
+  if(!payments.length){tb.innerHTML='<tr><td colspan="7" class="empty-state">Belum ada pembayaran.</td></tr>';return;}
+  tb.innerHTML=[...payments].reverse().map(p=>`
     <tr>
-      <td>${p.tenant}</td>
-      <td>Km ${p.room}</td>
+      <td>${p.tenant}</td><td>Km ${p.room}</td>
       <td><strong>${fmtIDR(p.amount)}</strong></td>
-      <td>${p.date}</td>
+      <td style="font-size:0.82rem">${p.date}</td>
       <td>${p.type}</td>
-      <td><span class="badge badge-${p.status==='paid'?'green':p.status==='overdue'?'red':'yellow'}">${p.status==='paid'?'Lunas':p.status==='overdue'?'Jatuh Tempo':'Menunggu'}</span></td>
+      <td><span class="badge b-${p.status==='paid'?'green':p.status==='overdue'?'red':'yellow'}">${p.status==='paid'?'Lunas':p.status==='overdue'?'Jatuh Tempo':'Menunggu'}</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deletePayment('${p.id}')">×</button></td>
     </tr>`).join('');
 }
+function deletePayment(id){payments=payments.filter(x=>x.id!==id);renderPayments();renderPayStats();updateStats();toast('Pembayaran dihapus');}
 
-function renderPaymentStats() {
-  const thisMonth = new Date().getMonth();
-  const collected = payments.filter(p=>p.status==='paid'&&new Date(p.date).getMonth()===thisMonth).reduce((s,p)=>s+p.amount,0);
-  const outstanding = payments.filter(p=>p.status!=='paid').reduce((s,p)=>s+p.amount,0);
-  document.getElementById('p-collected').textContent = fmtIDR(collected);
-  document.getElementById('p-outstanding').textContent = fmtIDR(outstanding);
-  document.getElementById('p-count').textContent = payments.length;
+function renderPayStats(){
+  const m=new Date().getMonth();
+  const coll=payments.filter(p=>p.status==='paid'&&new Date(p.date).getMonth()===m).reduce((s,p)=>s+p.amount,0);
+  const out=payments.filter(p=>p.status!=='paid').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('p-coll').textContent=fmtIDR(coll);
+  document.getElementById('p-out').textContent=fmtIDR(out);
+  document.getElementById('p-cnt').textContent=payments.length;
 }
 
-function renderUpcomingPayments() {
-  const el = document.getElementById('upcoming-payments');
-  if(!tenants.length) { el.innerHTML='<div style="color:var(--muted);font-size:0.84rem">Belum ada penyewa.</div>'; return; }
-  el.innerHTML = tenants.slice(0,6).map(t=>`
-    <div class="pay-item">
-      <div><div style="font-size:0.855rem;font-weight:500">${t.name}</div><div style="font-size:0.73rem;color:var(--muted)">Kamar ${t.room} · Jatuh tempo tgl ${t.dueday}</div></div>
-      <div style="font-family:var(--font-head);font-weight:600;font-size:0.9rem">${fmtIDR(t.rent)}</div>
+function renderUpcoming(){
+  const el=document.getElementById('dash-upcoming');if(!el)return;
+  if(!tenants.length){el.innerHTML='<div style="color:var(--muted);font-size:0.84rem">Belum ada penyewa.</div>';return;}
+  el.innerHTML=tenants.slice(0,6).map(t=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid rgba(39,47,63,0.45)">
+      <div><div style="font-size:0.855rem;font-weight:500">${t.name}</div><div style="font-size:0.72rem;color:var(--muted)">Kamar ${t.room} · Tgl ${t.due}</div></div>
+      <div style="font-family:var(--font-h);font-weight:600;font-size:0.88rem">${fmtIDR(t.rent)}</div>
     </div>`).join('');
 }
 
-// ===== CHECK IN/OUT =====
-function doCheckin() {
-  const tid = document.getElementById('ci-tenant').value;
-  if(!tid) { toast('⚠ Pilih penyewa'); return; }
-  const t = tenants.find(x=>x.id==tid);
-  logs.unshift({tenant:t.name, room:t.room, type:'Check-in', datetime:document.getElementById('ci-date').value, notes:document.getElementById('ci-notes').value});
-  renderLog(); logActivity(`${t.name} check-in`, 'success'); toast(`✓ ${t.name} check-in`);
-  document.getElementById('ci-notes').value='';
+// ============================================================
+// CHECK IN/OUT
+// ============================================================
+function doCheckin(){
+  const tid=document.getElementById('ci-ten').value;
+  if(!tid){toast('⚠ Pilih penyewa');return;}
+  const t=tenants.find(x=>x.id===tid);
+  logs.unshift({tenant:t.name,room:t.room,type:'Check-in',dt:document.getElementById('ci-dt').value,note:document.getElementById('ci-note').value});
+  renderLog();logAct(`${t.name} check-in`,'success');toast(`✓ ${t.name} check-in`);
+  document.getElementById('ci-note').value='';
+}
+function doCheckout(){
+  const tid=document.getElementById('co-ten').value;
+  if(!tid){toast('⚠ Pilih penyewa');return;}
+  const t=tenants.find(x=>x.id===tid);
+  logs.unshift({tenant:t.name,room:t.room,type:'Check-out',dt:document.getElementById('co-dt').value,note:'Kondisi: '+document.getElementById('co-cond').value+'. '+document.getElementById('co-note').value});
+  renderLog();logAct(`${t.name} check-out`,'warning');toast(`${t.name} check-out`);
+  document.getElementById('co-note').value='';
+}
+function renderLog(){
+  const tb=document.getElementById('log-tbody');
+  if(!logs.length){tb.innerHTML='<tr><td colspan="5" class="empty-state">Belum ada log.</td></tr>';return;}
+  tb.innerHTML=logs.map(l=>`<tr><td>${l.tenant}</td><td>Km ${l.room}</td><td><span class="badge b-${l.type==='Check-in'?'green':'red'}">${l.type}</span></td><td style="font-size:0.8rem">${l.dt||'—'}</td><td style="font-size:0.79rem;color:var(--muted)">${l.note||'—'}</td></tr>`).join('');
 }
 
-function doCheckout() {
-  const tid = document.getElementById('co-tenant').value;
-  if(!tid) { toast('⚠ Pilih penyewa'); return; }
-  const t = tenants.find(x=>x.id==tid);
-  const cond = document.getElementById('co-condition').value;
-  logs.unshift({tenant:t.name, room:t.room, type:'Check-out', datetime:document.getElementById('co-date').value, notes:`Kondisi: ${cond}. `+document.getElementById('co-notes').value});
-  renderLog(); logActivity(`${t.name} check-out`, 'warning'); toast(`${t.name} check-out`);
-  document.getElementById('co-notes').value='';
-}
-
-function renderLog() {
-  const tbody = document.getElementById('log-tbody');
-  if(!logs.length) { tbody.innerHTML='<tr><td colspan="5" class="empty-state">Belum ada log.</td></tr>'; return; }
-  tbody.innerHTML = logs.map(l=>`
-    <tr>
-      <td>${l.tenant}</td>
-      <td>Km ${l.room}</td>
-      <td><span class="badge badge-${l.type==='Check-in'?'green':'red'}">${l.type}</span></td>
-      <td style="font-size:0.8rem">${l.datetime||'—'}</td>
-      <td style="color:var(--muted);font-size:0.79rem">${l.notes||'—'}</td>
-    </tr>`).join('');
-}
-
-// ===== MAINTENANCE =====
-function addMaintenance() {
-  const title = document.getElementById('m-title').value.trim();
-  if(!title) { toast('⚠ Judul masalah wajib diisi'); return; }
-  maintenance.unshift({
-    id:Date.now(),
-    room:document.getElementById('m-room').value,
-    priority:document.getElementById('m-priority').value,
-    title, desc:document.getElementById('m-desc').value,
-    by:document.getElementById('m-by').value,
-    status:'open',
-    date:new Date().toLocaleDateString('id-ID')
-  });
-  closeModal('modal-addmaint');
-  ['m-title','m-desc','m-by'].forEach(id=>document.getElementById(id).value='');
-  renderMaintenance(); renderDashMaintenance(); updateStats();
-  logActivity(`Maintenance: ${title}`, 'danger'); toast('✓ Masalah dilaporkan');
-}
-
-function renderMaintenance(filter='all') {
-  const el = document.getElementById('maint-list');
-  const list = filter==='all' ? maintenance : maintenance.filter(m=>m.status===filter);
-  if(!list.length) { el.innerHTML='<div class="empty-state">Tidak ada masalah.</div>'; return; }
-  const prioColor = {Rendah:'var(--muted)',Sedang:'var(--yellow)',Tinggi:'var(--orange)',Darurat:'var(--red)'};
-  el.innerHTML = list.map(m=>`
-    <div class="maint-item ${m.status==='open'?'open-issue':m.status==='in-progress'?'in-progress':'resolved'}">
-      <div class="maint-header">
-        <div>
-          <div class="maint-title">${m.title}</div>
-          <div class="maint-desc">${m.desc||''}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.35rem;flex-shrink:0;margin-left:0.75rem">
-          <span class="badge badge-${m.status==='open'?'red':m.status==='in-progress'?'yellow':'green'}">${m.status==='open'?'Terbuka':m.status==='in-progress'?'Proses':'Selesai'}</span>
-          <span style="font-size:0.7rem;color:${prioColor[m.priority]}">${m.priority}</span>
-        </div>
-      </div>
-      <div class="maint-meta">Kamar ${m.room||'—'} · Oleh ${m.by||'Tidak diketahui'} · ${m.date}</div>
-      <div style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap">
-        ${m.status==='open'?`<button class="btn btn-yellow btn-sm" onclick="setMaintStatus(${m.id},'in-progress')">Tandai Proses</button>`:''}
-        ${m.status!=='resolved'?`<button class="btn btn-success btn-sm" onclick="setMaintStatus(${m.id},'resolved')">Tandai Selesai</button>`:''}
-      </div>
-    </div>`).join('');
-}
-
-function setMaintStatus(id, status) {
-  const m = maintenance.find(x=>x.id===id); m.status=status;
-  renderMaintenance(); renderDashMaintenance();
-  logActivity(`Maintenance "${m.title}" → ${status==='resolved'?'Selesai':'Proses'}`, status==='resolved'?'success':'warning');
-  toast(`Masalah → ${status==='resolved'?'Selesai':'Proses'}`);
-}
-function filterMaint(f) { renderMaintenance(f); }
-
-function renderDashMaintenance() {
-  const el = document.getElementById('dash-maintenance');
-  const open = maintenance.filter(m=>m.status==='open');
-  if(!open.length) { el.innerHTML='<div style="color:var(--muted);font-size:0.84rem">Tidak ada masalah terbuka. 🎉</div>'; return; }
-  el.innerHTML = open.slice(0,3).map(m=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid rgba(42,47,69,0.4)">
-      <div><div style="font-size:0.875rem;font-weight:500">${m.title}</div><div style="font-size:0.73rem;color:var(--muted)">Kamar ${m.room||'?'}</div></div>
-      <span class="badge badge-red">Terbuka</span>
-    </div>`).join('');
-}
-
-// ===== INVOICE =====
-function updateInvCounter() {
-  const n = String(invCounter).padStart(3,'0');
-  if(!document.getElementById('inv-number').value || document.getElementById('inv-number').value.startsWith('INV-')) {
-    document.getElementById('inv-number').value = `INV-${n}`;
+// ============================================================
+// MAINTENANCE
+// ============================================================
+function addMaintenance(tenantOverride){
+  let title,desc,prio,room,by;
+  if(tenantOverride){
+    title=document.getElementById('tm-title').value.trim();
+    desc=document.getElementById('tm-desc').value;
+    prio=document.getElementById('tm-prio').value;
+    const t=tenants.find(x=>x.id===currentTenantId);
+    room=t?t.room:'';
+    by=t?t.name:'Penyewa';
+    if(!title){toast('⚠ Judul masalah wajib');return;}
+    ['tm-title','tm-desc'].forEach(i=>document.getElementById(i).value='');
+  } else {
+    title=document.getElementById('ma-title').value.trim();
+    desc=document.getElementById('ma-desc').value;
+    prio=document.getElementById('ma-prio').value;
+    room=document.getElementById('ma-room').value;
+    by=document.getElementById('ma-by').value;
+    if(!title){toast('⚠ Judul masalah wajib');return;}
+    closeModal('m-addmaint');
+    ['ma-title','ma-desc','ma-by'].forEach(i=>document.getElementById(i).value='');
   }
+  maintenance.unshift({id:uid(),room,prio,title,desc,by,status:'open',date:new Date().toLocaleDateString('id-ID'),tenantId:currentTenantId});
+  renderMaintenance();renderDashMaint();updateStats();
+  logAct(`Maintenance: ${title}`,'danger');toast('✓ Masalah dilaporkan');
+  if(tenantOverride)renderTenantMaint();
 }
 
-function fillInvoiceDefaults() {
-  const tid = document.getElementById('inv-tenant').value;
-  if(!tid) return;
-  const t = tenants.find(x=>x.id==tid);
-  if(t) document.getElementById('inv-rent').value = t.rent;
+function renderMaintenance(filter='all'){
+  const el=document.getElementById('maint-list');
+  const list=filter==='all'?maintenance:maintenance.filter(m=>m.status===filter);
+  if(!list.length){el.innerHTML='<div class="empty-state">Tidak ada masalah.</div>';return;}
+  const pc={Rendah:'var(--muted)',Sedang:'var(--yellow)',Tinggi:'var(--orange)',Darurat:'var(--red)'};
+  el.innerHTML=list.map(m=>`
+    <div class="mi ${m.status==='open'?'open-issue':m.status==='in-progress'?'in-progress':'resolved'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div style="font-weight:500;font-size:0.875rem">${m.title}</div><div style="font-size:0.79rem;color:var(--muted);margin-top:0.18rem">${m.desc||''}</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem;flex-shrink:0;margin-left:0.75rem">
+          <span class="badge b-${m.status==='open'?'red':m.status==='in-progress'?'yellow':'green'}">${m.status==='open'?'Terbuka':m.status==='in-progress'?'Proses':'Selesai'}</span>
+          <span style="font-size:0.69rem;color:${pc[m.prio]}">${m.prio}</span>
+        </div>
+      </div>
+      <div style="font-size:0.71rem;color:var(--muted);margin-top:0.4rem">Kamar ${m.room||'—'} · Oleh ${m.by||'?'} · ${m.date}</div>
+      <div style="display:flex;gap:0.45rem;margin-top:0.55rem;flex-wrap:wrap">
+        ${m.status==='open'?`<button class="btn btn-sm" style="background:rgba(234,179,8,0.1);color:var(--yellow);border:1px solid rgba(234,179,8,0.2)" onclick="setMaintStatus('${m.id}','in-progress')">Tandai Proses</button>`:''}
+        ${m.status!=='resolved'?`<button class="btn btn-success btn-sm" onclick="setMaintStatus('${m.id}','resolved')">Selesai</button>`:''}
+      </div>
+    </div>`).join('');
+}
+function setMaintStatus(id,status){
+  const m=maintenance.find(x=>x.id===id);m.status=status;
+  renderMaintenance();renderDashMaint();
+  logAct(`Maintenance "${m.title}" → ${status==='resolved'?'Selesai':'Proses'}`,status==='resolved'?'success':'warning');
+  toast(`Masalah → ${status==='resolved'?'Selesai':'Proses'}`);
+  if(currentRole==='tenant')renderTenantMaint();
+}
+function filterMaint(f){renderMaintenance(f);}
+
+function renderDashMaint(){
+  const el=document.getElementById('dash-maint');if(!el)return;
+  const open=maintenance.filter(m=>m.status==='open');
+  if(!open.length){el.innerHTML='<div style="color:var(--muted);font-size:0.84rem">Tidak ada masalah terbuka 🎉</div>';return;}
+  el.innerHTML=open.slice(0,4).map(m=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.52rem 0;border-bottom:1px solid rgba(39,47,63,0.45)">
+      <div><div style="font-size:0.875rem;font-weight:500">${m.title}</div><div style="font-size:0.72rem;color:var(--muted)">Kamar ${m.room||'?'}</div></div>
+      <span class="badge b-red">Terbuka</span>
+    </div>`).join('');
 }
 
-function previewInvoice() {
-  const tid = document.getElementById('inv-tenant').value;
-  if(!tid) { toast('⚠ Pilih penyewa terlebih dahulu'); return; }
-  const t = tenants.find(x=>x.id==tid);
-  const invNum = document.getElementById('inv-number').value || 'INV-001';
-  const period = document.getElementById('inv-period').value;
-  const invDate = document.getElementById('inv-date').value;
-  const rent = Number(document.getElementById('inv-rent').value)||0;
-  const electric = Number(document.getElementById('inv-electric').value)||0;
-  const water = Number(document.getElementById('inv-water').value)||0;
-  const other = Number(document.getElementById('inv-other').value)||0;
-  const otherDesc = document.getElementById('inv-otherdesc').value || 'Biaya lainnya';
-  const notes = document.getElementById('inv-notes').value;
-  const total = rent + electric + water + other;
+// ============================================================
+// INVOICE
+// ============================================================
+function fillInvDefaults(){
+  const tid=document.getElementById('inv-ten').value;
+  if(!tid)return;
+  const t=tenants.find(x=>x.id===tid);
+  if(t)document.getElementById('inv-rent').value=t.rent;
+}
+function fillTenantInvDefaults(){
+  if(!currentTenantId)return;
+  const t=tenants.find(x=>x.id===currentTenantId);
+  if(!t)return;
+  document.getElementById('tinv-rent').value=t.rent;
+  const n=String(invNo).padStart(3,'0');
+  document.getElementById('tinv-no').value=`INV-${n}`;
+  document.getElementById('tinv-dt').value=new Date().toISOString().slice(0,10);
+  document.getElementById('tinv-period').value=new Date().toISOString().slice(0,7);
+  document.getElementById('tenant-inv-info').innerHTML=`<strong>${t.name}</strong> — Kamar ${t.room} — Sewa ${fmtIDR(t.rent)}/bln — Jatuh tempo tgl ${t.due}`;
+  document.getElementById('tenant-inv-info').style.color='var(--teal)';
+}
 
-  const periodLabel = period ? new Date(period+'-01').toLocaleDateString('id-ID',{month:'long',year:'numeric'}) : '—';
-  const dateLabel = invDate ? new Date(invDate).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '—';
-
-  const items = [];
-  if(rent) items.push({desc:'Sewa Kamar ' + t.room, amount:rent});
-  if(electric) items.push({desc:'Biaya Listrik', amount:electric});
-  if(water) items.push({desc:'Biaya Air', amount:water});
-  if(other) items.push({desc:otherDesc, amount:other});
-
-  document.getElementById('invoice-preview-area').innerHTML = `
-  <div class="invoice-preview" id="inv-printable">
-    <div class="inv-header">
-      <div>
-        <div class="inv-company">Ibu Yadi Kost</div>
-        <div style="font-size:11px;color:#666;margin-top:4px">Penginapan & Kost</div>
-        <div style="font-size:11px;color:#666">Telp: —</div>
-      </div>
-      <div style="text-align:right">
-        <div class="inv-title">INVOICE</div>
-        <div class="inv-label">No. Invoice</div>
-        <div style="font-weight:600">${invNum}</div>
-        <div class="inv-label" style="margin-top:6px">Tanggal</div>
-        <div>${dateLabel}</div>
-      </div>
+function buildInvHTML(t,no,dt,period,rent,elec,water,other,otherDesc,notes){
+  const items=[];
+  if(rent)items.push({d:'Sewa Kamar '+t.room,a:rent});
+  if(elec)items.push({d:'Biaya Listrik',a:elec});
+  if(water)items.push({d:'Biaya Air',a:water});
+  if(other)items.push({d:otherDesc||'Biaya Lainnya',a:other});
+  const total=rent+elec+water+other;
+  const periodLbl=period?new Date(period+'-01').toLocaleDateString('id-ID',{month:'long',year:'numeric'}):'—';
+  const dateLbl=dt?new Date(dt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'—';
+  return `<div class="inv-wrap" id="inv-printable">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:2px solid #e5e7eb">
+      <div><div style="font-size:17px;font-weight:800;color:#1a1a2e">Ibu Yadi Kost</div><div style="font-size:11px;color:#888;margin-top:3px">Manajemen Kost Profesional</div></div>
+      <div style="text-align:right"><div style="font-size:23px;font-weight:800;color:#1a1a2e">INVOICE</div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.05em">No. Invoice</div><div style="font-weight:700">${no}</div><div style="font-size:10px;color:#888;margin-top:4px">Tanggal</div><div>${dateLbl}</div></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;padding:0.75rem;background:#f9fafb;border-radius:6px;font-size:12px">
-      <div>
-        <div class="inv-label">Tagihan Kepada</div>
-        <div style="font-weight:700;margin-top:2px">${t.name}</div>
-        <div style="color:#555">Kamar ${t.room}</div>
-        <div style="color:#555">${t.phone||'—'}</div>
-      </div>
-      <div>
-        <div class="inv-label">Periode</div>
-        <div style="font-weight:600;margin-top:2px">${periodLabel}</div>
-        <div class="inv-label" style="margin-top:6px">Jatuh Tempo</div>
-        <div style="font-weight:600">Tgl ${t.dueday} tiap bulan</div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;padding:0.75rem;background:#f9fafb;border-radius:7px;font-size:12px">
+      <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.05em">Tagihan Kepada</div><div style="font-weight:700;margin-top:3px">${t.name}</div><div style="color:#555">Kamar ${t.room}</div><div style="color:#555">${t.phone||'—'}</div>${t.ktp?`<div style="color:#888;font-size:11px">KTP: ${t.ktp}</div>`:''}</div>
+      <div><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.05em">Periode</div><div style="font-weight:700;margin-top:3px">${periodLbl}</div><div style="font-size:10px;color:#888;margin-top:6px">Jatuh Tempo</div><div style="font-weight:600">Tgl ${t.due} setiap bulan</div></div>
     </div>
-    <table class="inv-table">
-      <thead><tr><th>Keterangan</th><th style="text-align:right">Jumlah</th></tr></thead>
-      <tbody>
-        ${items.length ? items.map(i=>`<tr><td>${i.desc}</td><td style="text-align:right">${fmtIDR(i.amount)}</td></tr>`).join('') : '<tr><td colspan="2" style="color:#888;text-align:center">Tidak ada item</td></tr>'}
-      </tbody>
+    <table style="width:100%;border-collapse:collapse;margin:0.75rem 0;font-size:13px">
+      <thead><tr><th style="background:#f3f4f6;padding:0.5rem 0.75rem;text-align:left;font-size:11px;text-transform:uppercase;color:#555;letter-spacing:0.04em">Keterangan</th><th style="background:#f3f4f6;padding:0.5rem 0.75rem;text-align:right;font-size:11px;text-transform:uppercase;color:#555">Jumlah</th></tr></thead>
+      <tbody>${items.length?items.map(i=>`<tr><td style="padding:0.5rem 0.75rem;border-bottom:1px solid #e5e7eb">${i.d}</td><td style="padding:0.5rem 0.75rem;text-align:right;border-bottom:1px solid #e5e7eb">${fmtIDR(i.a)}</td></tr>`).join(''):'<tr><td colspan="2" style="padding:0.5rem 0.75rem;color:#888;text-align:center">Tidak ada item</td></tr>'}</tbody>
     </table>
-    <div style="border-top:2px solid #1a1a2e;margin-top:0.5rem;padding-top:0.5rem">
-      <div class="inv-total">Total: ${fmtIDR(total)}</div>
-    </div>
+    <div style="border-top:2px solid #1a1a2e;padding-top:0.5rem;text-align:right"><div style="font-size:15px;font-weight:800;color:#1a1a2e">Total: ${fmtIDR(total)}</div></div>
     ${notes?`<div style="margin-top:1rem;padding:0.65rem;background:#f9fafb;border-radius:6px;font-size:12px;color:#555"><strong>Catatan:</strong> ${notes}</div>`:''}
-    <div class="inv-footer">
-      Terima kasih atas kepercayaan Anda · Ibu Yadi Kost<br>
-      Mohon lakukan pembayaran sebelum tanggal jatuh tempo.
-    </div>
+    <div style="margin-top:1.5rem;padding-top:0.75rem;border-top:1px solid #e5e7eb;font-size:11px;color:#888;text-align:center">Terima kasih telah membayar tepat waktu · Ibu Yadi Kost<br>Mohon lakukan pembayaran sebelum tanggal jatuh tempo.</div>
   </div>`;
-  invCounter++;
-  document.getElementById('inv-number').value = `INV-${String(invCounter).padStart(3,'0')}`;
 }
 
-function printInvoice() {
-  const el = document.getElementById('inv-printable');
-  if(!el) { toast('⚠ Buat preview terlebih dahulu'); return; }
-  const w = window.open('','_blank');
+function previewInv(mode){
+  let t,no,dt,period,rent,elec,water,other,otherDesc,notes,targetEl;
+  if(mode==='admin'){
+    const tid=document.getElementById('inv-ten').value;
+    if(!tid){toast('⚠ Pilih penyewa');return;}
+    t=tenants.find(x=>x.id===tid);
+    no=document.getElementById('inv-no').value||'INV-001';
+    dt=document.getElementById('inv-dt').value;
+    period=document.getElementById('inv-period').value;
+    rent=Number(document.getElementById('inv-rent').value)||0;
+    elec=Number(document.getElementById('inv-elec').value)||0;
+    water=Number(document.getElementById('inv-water').value)||0;
+    other=Number(document.getElementById('inv-other').value)||0;
+    otherDesc=document.getElementById('inv-otherdesc').value;
+    notes=document.getElementById('inv-notes').value;
+    targetEl=document.getElementById('inv-preview-admin');
+  } else {
+    if(!currentTenantId){toast('⚠ Tidak ada penyewa aktif');return;}
+    t=tenants.find(x=>x.id===currentTenantId);
+    no=document.getElementById('tinv-no').value||'INV-001';
+    dt=document.getElementById('tinv-dt').value;
+    period=document.getElementById('tinv-period').value;
+    rent=Number(document.getElementById('tinv-rent').value)||0;
+    elec=Number(document.getElementById('tinv-elec').value)||0;
+    water=Number(document.getElementById('tinv-water').value)||0;
+    other=Number(document.getElementById('tinv-other').value)||0;
+    otherDesc=document.getElementById('tinv-otherdesc').value;
+    notes=document.getElementById('tinv-notes').value;
+    targetEl=document.getElementById('inv-preview-tenant');
+  }
+  if(!t){toast('⚠ Data penyewa tidak ditemukan');return;}
+  targetEl.innerHTML=buildInvHTML(t,no,dt,period,rent,elec,water,other,otherDesc,notes);
+  invNo++;
+  toast('✓ Preview siap');
+}
+
+function printInv(){
+  const el=document.getElementById('inv-printable');
+  if(!el){toast('⚠ Buat preview terlebih dahulu');return;}
+  const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice - Ibu Yadi Kost</title>
-  <style>
-    body{margin:0;padding:20px;font-family:Arial,sans-serif;font-size:13px;background:#fff;color:#222}
-    .inv-header{display:flex;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid #e5e7eb}
-    .inv-company{font-size:16px;font-weight:700;color:#1a1a2e}
-    .inv-title{font-size:22px;font-weight:800;color:#1a1a2e;text-align:right}
-    .inv-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.05em}
-    table{width:100%;border-collapse:collapse;margin:1rem 0}
-    th{background:#f3f4f6;padding:0.5rem 0.75rem;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:#555}
-    td{padding:0.5rem 0.75rem;border-bottom:1px solid #e5e7eb}
-    .inv-footer{margin-top:1.5rem;padding-top:0.75rem;border-top:1px solid #e5e7eb;font-size:11px;color:#888;text-align:center}
-    @media print{body{padding:0}}
-  </style></head><body>${el.outerHTML}<script>window.onload=()=>{window.print();}<\/script></body></html>`);
+  <style>body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#fff}table{width:100%;border-collapse:collapse}@media print{body{padding:0}}</style>
+  </head><body>${el.outerHTML}<script>window.onload=()=>window.print();<\/script></body></html>`);
   w.document.close();
   toast('✓ Dialog cetak dibuka');
 }
 
-// ===== IMPROVEMENTS =====
-function addImprovement() {
-  const text = document.getElementById('i-text').value.trim();
-  if(!text) { toast('⚠ Saran tidak boleh kosong'); return; }
-  improvements.unshift({id:Date.now(), cat:document.getElementById('i-cat').value, text, by:document.getElementById('i-by').value||'Anonim', date:new Date().toLocaleDateString('id-ID'), votes:0});
-  closeModal('modal-addimprove');
-  ['i-text','i-by'].forEach(id=>document.getElementById(id).value='');
+// ============================================================
+// IMPROVEMENTS
+// ============================================================
+function addImprovement(){
+  const text=document.getElementById('imp-text').value.trim();
+  if(!text){toast('⚠ Saran tidak boleh kosong');return;}
+  improvements.unshift({id:uid(),cat:document.getElementById('imp-cat').value,text,by:document.getElementById('imp-by').value||(currentRole==='tenant'?currentUser:'Anonim'),date:new Date().toLocaleDateString('id-ID'),votes:0,tenantId:currentTenantId});
+  closeModal('m-addimprove');
+  ['imp-text','imp-by'].forEach(i=>document.getElementById(i).value='');
   renderImprovements();
-  logActivity(`Saran baru: "${text.slice(0,30)}..."`, 'info');
-  toast('✓ Saran terkirim');
+  if(currentRole==='tenant')renderTenantSuggest();
+  logAct('Saran baru dikirim','info');toast('✓ Saran terkirim');
 }
-
-function renderImprovements() {
-  const el = document.getElementById('improve-list');
-  if(!improvements.length) { el.innerHTML='<div class="empty-state">Belum ada saran.</div>'; return; }
-  el.innerHTML = improvements.map(i=>`
-    <div class="improve-item">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
-          <span class="badge badge-blue" style="margin-bottom:0.35rem">${i.cat}</span>
-          <div style="font-size:0.875rem">${i.text}</div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">${i.by} · ${i.date}</div>
-        </div>
-      </div>
-      <div class="improve-vote">
-        <button class="vote-btn" onclick="vote(${i.id})">👍 Dukung</button>
-        <span style="font-size:0.78rem;color:var(--muted)">${i.votes} dukungan</span>
-        <button class="vote-btn" onclick="removeImprovement(${i.id})" style="margin-left:auto;border-color:rgba(255,92,92,0.2);color:var(--red)">Hapus</button>
+function renderImprovements(){
+  const el=document.getElementById('improve-list');
+  if(!el)return;
+  if(!improvements.length){el.innerHTML='<div class="empty-state">Belum ada saran.</div>';return;}
+  el.innerHTML=improvements.map(i=>`
+    <div class="ii">
+      <span class="badge b-blue" style="margin-bottom:0.35rem">${i.cat}</span>
+      <div style="font-size:0.875rem;margin-top:0.2rem">${i.text}</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">${i.by} · ${i.date}</div>
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem">
+        <button class="vote-btn" onclick="voteImprov('${i.id}')">👍 Dukung</button>
+        <span style="font-size:0.77rem;color:var(--muted)">${i.votes} dukungan</span>
+        ${currentRole==='admin'?`<button class="vote-btn" onclick="removeImprov('${i.id}')" style="margin-left:auto;color:var(--red)">Hapus</button>`:''}
       </div>
     </div>`).join('');
 }
-function vote(id) { improvements.find(x=>x.id===id).votes++; renderImprovements(); }
-function removeImprovement(id) { improvements=improvements.filter(x=>x.id!==id); renderImprovements(); toast('Saran dihapus'); }
+function voteImprov(id){improvements.find(x=>x.id===id).votes++;renderImprovements();renderTenantSuggest();}
+function removeImprov(id){improvements=improvements.filter(x=>x.id!==id);renderImprovements();toast('Saran dihapus');}
 
-function populateMaintRooms() {
-  const sel = document.getElementById('m-room');
-  sel.innerHTML = '<option value="">-- Pilih --</option>' + rooms.map(r=>`<option value="${r.num}">Kamar ${r.num}</option>`).join('');
+// ============================================================
+// ANNOUNCEMENTS
+// ============================================================
+function addAnnouncement(){
+  const title=document.getElementById('ann-title').value.trim();
+  const body=document.getElementById('ann-body').value.trim();
+  if(!title||!body){toast('⚠ Judul dan isi wajib diisi');return;}
+  announcements.unshift({id:uid(),title,body,type:document.getElementById('ann-type').value,date:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),time:fmtNow()});
+  closeModal('m-announce');
+  ['ann-title','ann-body'].forEach(i=>document.getElementById(i).value='');
+  renderAnnouncements();logAct(`Pengumuman: ${title}`,'info');toast('✓ Pengumuman dikirim');
+}
+function renderAnnouncements(){
+  const el=document.getElementById('announce-list');if(!el)return;
+  if(!announcements.length){el.innerHTML='<div class="empty-state">Belum ada pengumuman.</div>';return;}
+  el.innerHTML=announcements.map(a=>`
+    <div class="notif notif-${a.type==='warn'?'warn':a.type==='ok'?'ok':'info'}" style="margin-bottom:0.75rem;border-radius:10px;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
+        <strong>${a.title}</strong>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0;margin-left:1rem">
+          <span style="font-size:0.72rem;opacity:0.7">${a.date}</span>
+          <button onclick="removeAnn('${a.id}')" style="background:none;border:none;cursor:pointer;color:inherit;opacity:0.6;font-size:0.8rem">×</button>
+        </div>
+      </div>
+      <div style="margin-top:0.4rem;font-size:0.84rem;opacity:0.85">${a.body}</div>
+    </div>`).join('');
+}
+function removeAnn(id){announcements=announcements.filter(x=>x.id!==id);renderAnnouncements();renderTenantAnnounce();toast('Pengumuman dihapus');}
+
+// ============================================================
+// TENANT PORTAL RENDERS
+// ============================================================
+function renderTenantHome(){
+  if(!currentTenantId)return;
+  const t=tenants.find(x=>x.id===currentTenantId);
+  if(!t)return;
+  const heroEl=document.getElementById('tenant-hero-area');
+  if(heroEl){
+    heroEl.innerHTML=`<div class="tenant-hero">
+      <div><div class="tenant-hero-name">Halo, ${t.name}! 👋</div><div class="tenant-hero-sub">Kamar ${t.room} · Sewa ${fmtIDR(t.rent)}/bln · Masuk sejak ${t.movein||'—'}</div></div>
+      <div class="tenant-hero-badge"><span class="badge b-teal" style="font-size:0.8rem;padding:0.35em 0.85em">Jatuh Tempo Tgl ${t.due}</span></div>
+    </div>
+    <div class="tenant-meta-grid">
+      <div class="tmeta"><div class="tmeta-lbl">Total Transaksi</div><div class="tmeta-val">${payments.filter(p=>p.tenantId===currentTenantId).length}</div></div>
+      <div class="tmeta"><div class="tmeta-lbl">Belum Lunas</div><div class="tmeta-val" style="color:var(--red)">${payments.filter(p=>p.tenantId===currentTenantId&&p.status!=='paid').length}</div></div>
+      <div class="tmeta"><div class="tmeta-lbl">Masalah Dilaporkan</div><div class="tmeta-val">${maintenance.filter(m=>m.tenantId===currentTenantId).length}</div></div>
+      <div class="tmeta"><div class="tmeta-lbl">Saran Dikirim</div><div class="tmeta-val">${improvements.filter(i=>i.tenantId===currentTenantId).length}</div></div>
+    </div>`;
+  }
+  // Notifications
+  const notifEl=document.getElementById('tenant-notifs');
+  if(notifEl){
+    const overdue=payments.filter(p=>p.tenantId===currentTenantId&&p.status==='overdue');
+    const pending=payments.filter(p=>p.tenantId===currentTenantId&&p.status==='pending');
+    let notifs='';
+    if(overdue.length) notifs+=`<div class="notif notif-warn"><span>⚠</span><div><strong>Tagihan Jatuh Tempo!</strong> Anda memiliki ${overdue.length} tagihan yang sudah jatuh tempo. Segera lakukan pembayaran.</div></div>`;
+    if(pending.length) notifs+=`<div class="notif notif-info"><span>ℹ</span><div>Ada ${pending.length} tagihan menunggu konfirmasi pembayaran.</div></div>`;
+    if(announcements.length) notifs+=`<div class="notif notif-ok"><span>📢</span><div>Ada ${announcements.length} pengumuman terbaru dari pengelola. <button onclick="showPage('page-tenant-announce')" style="background:none;border:none;cursor:pointer;color:inherit;text-decoration:underline;font-size:inherit;padding:0">Lihat →</button></div></div>`;
+    notifEl.innerHTML=notifs;
+  }
+  // Recent payments
+  const tp=payments.filter(p=>p.tenantId===currentTenantId);
+  const tpTb=document.getElementById('t-pay-tbody');
+  if(tpTb) tpTb.innerHTML=tp.length?[...tp].reverse().slice(0,5).map(p=>`<tr><td><strong>${fmtIDR(p.amount)}</strong></td><td style="font-size:0.82rem">${p.date}</td><td>${p.type}</td><td><span class="badge b-${p.status==='paid'?'green':p.status==='overdue'?'red':'yellow'}">${p.status==='paid'?'Lunas':p.status==='overdue'?'JT':'Menunggu'}</span></td></tr>`).join(''):'<tr><td colspan="4" class="empty-state">Belum ada pembayaran.</td></tr>';
+  // Maintenance
+  const tm=maintenance.filter(m=>m.tenantId===currentTenantId);
+  const tmEl=document.getElementById('t-maint-list');
+  if(tmEl) tmEl.innerHTML=tm.length?tm.slice(0,3).map(m=>`<div style="padding:0.55rem 0;border-bottom:1px solid rgba(39,47,63,0.45);font-size:0.84rem"><div style="font-weight:500">${m.title}</div><div style="font-size:0.74rem;color:var(--muted);margin-top:0.15rem">${m.date}</div><span class="badge b-${m.status==='open'?'red':m.status==='in-progress'?'yellow':'green'}" style="margin-top:0.25rem">${m.status==='open'?'Terbuka':m.status==='in-progress'?'Proses':'Selesai'}</span></div>`).join(''):'<div style="color:var(--muted);font-size:0.84rem">Belum ada laporan.</div>';
 }
 
-// ===== RENDER ALL =====
-function renderAll() {
-  updateStats(); renderRooms(); renderTenants(); renderPayments(); renderPaymentStats();
-  renderLog(); renderMaintenance(); renderDashMaintenance(); renderImprovements();
-  renderActivity(); renderUpcomingPayments();
+function renderTenantPayments(){
+  if(!currentTenantId)return;
+  const tp=payments.filter(p=>p.tenantId===currentTenantId);
+  const paid=tp.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0);
+  const out=tp.filter(p=>p.status!=='paid').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('tp-paid').textContent=fmtIDR(paid);
+  document.getElementById('tp-out').textContent=fmtIDR(out);
+  document.getElementById('tp-cnt').textContent=tp.length;
+  const tb=document.getElementById('tp-tbody');
+  tb.innerHTML=tp.length?[...tp].reverse().map(p=>`<tr><td><strong>${fmtIDR(p.amount)}</strong></td><td style="font-size:0.82rem">${p.date}</td><td>${p.type}</td><td><span class="badge b-${p.status==='paid'?'green':p.status==='overdue'?'red':'yellow'}">${p.status==='paid'?'Lunas':p.status==='overdue'?'Jatuh Tempo':'Menunggu'}</span></td><td style="font-size:0.8rem;color:var(--muted)">${p.notes||'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty-state">Belum ada pembayaran.</td></tr>';
 }
 
-// Populate m-room on modal open
-document.getElementById('modal-addmaint').addEventListener('click', ()=>{});
-const origOpenModal = openModal;
-window.openModal = function(id) {
-  if(id==='modal-addmaint') populateMaintRooms();
-  origOpenModal(id);
-};
+function tenantReportMaint(){addMaintenance(true);}
+
+function renderTenantMaint(){
+  if(!currentTenantId)return;
+  const tm=maintenance.filter(m=>m.tenantId===currentTenantId);
+  const el=document.getElementById('t-maint-full-list');
+  if(!el)return;
+  el.innerHTML=tm.length?tm.map(m=>`
+    <div style="padding:0.75rem;background:var(--bg);border-radius:7px;margin-bottom:0.6rem;border-left:3px solid ${m.status==='open'?'var(--red)':m.status==='in-progress'?'var(--yellow)':'var(--green)'}">
+      <div style="display:flex;justify-content:space-between">
+        <div style="font-weight:500;font-size:0.875rem">${m.title}</div>
+        <span class="badge b-${m.status==='open'?'red':m.status==='in-progress'?'yellow':'green'}">${m.status==='open'?'Terbuka':m.status==='in-progress'?'Proses':'Selesai'}</span>
+      </div>
+      <div style="font-size:0.79rem;color:var(--muted);margin-top:0.2rem">${m.desc||''}</div>
+      <div style="font-size:0.71rem;color:var(--muted);margin-top:0.35rem">${m.date} · ${m.prio}</div>
+    </div>`).join(''):'<div class="empty-state">Belum ada laporan.</div>';
+}
+
+function renderTenantAnnounce(){
+  const el=document.getElementById('t-announce-list');if(!el)return;
+  if(!announcements.length){el.innerHTML='<div class="empty-state">Belum ada pengumuman.</div>';return;}
+  el.innerHTML=announcements.map(a=>`
+    <div class="notif notif-${a.type==='warn'?'warn':a.type==='ok'?'ok':'info'}" style="margin-bottom:0.75rem;border-radius:10px;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;width:100%"><strong>${a.title}</strong><span style="font-size:0.72rem;opacity:0.7">${a.date}</span></div>
+      <div style="margin-top:0.4rem;font-size:0.84rem;opacity:0.85">${a.body}</div>
+    </div>`).join('');
+}
+
+function renderTenantSuggest(){
+  const el=document.getElementById('t-improve-list');if(!el)return;
+  const my=improvements.filter(i=>i.tenantId===currentTenantId);
+  if(!my.length){el.innerHTML='<div class="empty-state">Belum ada saran dari Anda.</div>';return;}
+  el.innerHTML=my.map(i=>`
+    <div class="ii">
+      <span class="badge b-blue">${i.cat}</span>
+      <div style="font-size:0.875rem;margin-top:0.3rem">${i.text}</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">${i.date} · ${i.votes} dukungan</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// INIT DEFAULTS & RENDER ALL
+// ============================================================
+function initDefaults(){
+  const now=new Date().toISOString().slice(0,16);
+  ['ci-dt','co-dt'].forEach(i=>{const el=document.getElementById(i);if(el)el.value=now;});
+  ['pay-dt'].forEach(i=>{const el=document.getElementById(i);if(el)el.value=new Date().toISOString().slice(0,10);});
+  ['inv-dt'].forEach(i=>{const el=document.getElementById(i);if(el)el.value=new Date().toISOString().slice(0,10);});
+  ['inv-period'].forEach(i=>{const el=document.getElementById(i);if(el)el.value=new Date().toISOString().slice(0,7);});
+  const n=String(invNo).padStart(3,'0');
+  const el=document.getElementById('inv-no');if(el)el.value=`INV-${n}`;
+}
+
+function renderAll(){
+  updateStats();renderRooms();renderTenants();renderPayments();renderPayStats();
+  renderLog();renderMaintenance();renderDashMaint();renderImprovements();
+  renderActivity();renderUpcoming();renderAnnouncements();
+}
 </script>
 </body>
 </html>
